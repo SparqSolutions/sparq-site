@@ -1,10 +1,130 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   
   onMount(() => {
     // Simple electrical effects without canvas
     createSimpleEffects();
+    
+    // Generative PCB background
+    setupPcbAnimation();
   });
+  
+  function setupPcbAnimation() {
+    const canvas = document.getElementById('pcb-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width: number, height: number, dpr: number;
+    let particles: Particle[] = [];
+    const numParticles = 60;
+    const particleSpeed = 0.6;
+    const gridSize = 20;
+
+    function resize() {
+      if (!ctx) return;
+      dpr = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.scale(dpr, dpr);
+      
+      ctx.strokeStyle = 'rgba(218, 165, 32, 0.1)';
+      ctx.lineWidth = 0.2;
+    }
+
+    class Particle {
+      x: number = 0;
+      y: number = 0;
+      dx: number = 0;
+      dy: number = 0;
+      distanceToTurn: number = 0;
+      distanceTraveled: number = 0;
+
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        const angle = Math.floor(Math.random() * 4) * (Math.PI / 2);
+        this.dx = Math.cos(angle);
+        this.dy = Math.sin(angle);
+        this.distanceToTurn = Math.random() * 100 + 50;
+        this.distanceTraveled = 0;
+      }
+
+      update() {
+        if (!ctx) return;
+        const lastX = this.x;
+        const lastY = this.y;
+        
+        this.x += this.dx * particleSpeed;
+        this.y += this.dy * particleSpeed;
+        this.distanceTraveled += particleSpeed;
+
+        // Draw the trail
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+
+        // Draw the sprite head
+        ctx.fillStyle = 'rgba(255, 215, 100, 0.4)';
+        ctx.shadowColor = '#FFD700';
+        ctx.shadowBlur = 2;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
+
+        if (this.distanceTraveled >= this.distanceToTurn) {
+            const turnDirection = Math.random() < 0.5 ? 1 : -1;
+            const newDx = -this.dy * turnDirection;
+            const newDy = this.dx * turnDirection;
+            this.dx = newDx;
+            this.dy = newDy;
+            this.distanceTraveled = 0;
+            this.distanceToTurn = Math.random() * 100 + 50;
+        }
+      }
+    }
+
+    function init() {
+      resize();
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      if (!ctx) return;
+      // Set the fill style for the fade effect on each frame
+      ctx.fillStyle = 'rgba(13, 13, 13, 0.25)';
+      ctx.fillRect(0, 0, width, height); // Apply fade
+
+      particles.forEach(p => p.update());
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', init);
+    init();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', init);
+    };
+  }
   
   function createSimpleEffects() {
     // Add random sparks to existing elements
@@ -20,17 +140,22 @@
   }
 </script>
 
+<svelte:head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+</svelte:head>
+
 <div class="app-container">
   <!-- Advanced PCB Background -->
-  <div class="pcb-background"></div>
+  <div class="pcb-background">
+    <canvas id="pcb-canvas"></canvas>
+    <div class="occlusion-vignette"></div>
+  </div>
   
   <!-- Navigation -->
   <nav class="main-nav">
     <div class="nav-container">
-      <div class="nav-logo">
-        <img src="/logo.png" alt="SPARQ" class="nav-logo-img" />
-        <span class="nav-brand">SPARQ</span>
-      </div>
       <div class="nav-links">
         <a href="#home" class="nav-link active">Home</a>
         <a href="#solutions" class="nav-link">Solutions</a>
@@ -81,7 +206,7 @@
   }
   
   :global(body) {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0D0D0D;
     color: #E8E8E8;
     overflow-x: hidden;
@@ -104,32 +229,22 @@
     height: 100%;
     pointer-events: none;
     z-index: 0;
-    background-image: 
-      /* Realistic PCB grid */
-      linear-gradient(rgba(184, 134, 11, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(184, 134, 11, 0.08) 1px, transparent 1px),
-      /* Circuit traces */
-      linear-gradient(45deg, transparent 48%, rgba(218, 165, 32, 0.05) 49%, rgba(218, 165, 32, 0.05) 51%, transparent 52%),
-      linear-gradient(-45deg, transparent 48%, rgba(218, 165, 32, 0.05) 49%, rgba(218, 165, 32, 0.05) 51%, transparent 52%),
-      /* Via holes */
-      radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.15) 1px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(184, 134, 11, 0.12) 1px, transparent 2px),
-      /* Component pads */
-      radial-gradient(circle at 50% 50%, rgba(218, 165, 32, 0.08) 2px, transparent 3px);
-    background-size: 
-      25px 25px,
-      25px 25px,
-      50px 50px,
-      50px 50px,
-      100px 100px,
-      150px 150px,
-      200px 200px;
-    animation: pcb-flow 30s linear infinite;
   }
   
-  @keyframes pcb-flow {
-    0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
-    100% { background-position: 25px 25px, -25px 25px, 50px 50px, -50px 50px, 100px 100px, -150px 150px, 200px 200px; }
+  .occlusion-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(13, 13, 13, 0.9) 25%, transparent 70%);
+    pointer-events: none;
+  }
+  
+  #pcb-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
   
   /* Navigation */
@@ -160,15 +275,16 @@
   }
   
   .nav-logo-img {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
     filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 8px rgba(184, 134, 11, 0.3));
   }
   
   .nav-brand {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #B8860B 0%, #DAA520 25%, #CD853F 50%, #B8860B 75%, #8B7355 100%);
+    background: linear-gradient(135deg, #D4AF37 0%, #B48811 25%, #E2B638 50%, #C49A28 75%, #AD8A2C 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

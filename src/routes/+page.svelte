@@ -56,17 +56,12 @@
   <section class="hero-section">
     <div class="hero-container">
       <div class="hero-content">
-        <div class="logo-showcase glass-panel interactive-card spark-target">
-          <img src="/logo.png" alt="SPARQ AI Solutions" class="hero-logo" />
-          <div class="logo-circuit-ring"></div>
-        </div>
-        
         <div class="hero-text">
-          <h1 class="hero-title">
-            <span class="gold-gradient">SPARQ</span>
-            <span class="hero-subtitle">AI Solutions</span>
-          </h1>
-          <p class="hero-tagline">AI Agents for Small & Medium Businesses</p>
+          <div class="hero-title-visual">
+            <img src="/logoold.png" alt="SPARQ Logo" class="hero-title-logo-image" />
+            <img src="/sparqname.png" alt="SPARQ" class="hero-title-name-image" />
+          </div>
+          <p class="hero-tagline">Specialized Agentic Business Solutions</p>
           <p class="hero-description">
             We build and deploy AI agents to handle your social media, generate content, and engage with your customers. 
             Our solutions are designed to grow your business and streamline your operations.
@@ -89,7 +84,7 @@
           
           <div class="hero-actions">
             <button class="cta-primary glass-panel interactive-card">
-              <span class="gold-gradient">Explore AI Demos</span>
+              <span>Explore AI Demos</span>
             </button>
             <button class="cta-secondary interactive-card">
               <span>Schedule Consultation</span>
@@ -330,11 +325,10 @@
   }
 
   .gold-gradient {
-    background: linear-gradient(90deg, #ffd700, #f7b733, #e69a2e);
+    background: linear-gradient(135deg, #D4AF37 0%, #B48811 25%, #E2B638 50%, #C49A28 75%, #AD8A2C 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
   }
 
   /* Glass Panel Effect */
@@ -356,7 +350,7 @@
 
   /* Hero Section */
   .hero-section {
-    padding-top: 4rem;
+    padding: 6rem 2rem 4rem;
     text-align: center;
   }
 
@@ -372,53 +366,29 @@
     align-items: center;
     gap: 3rem;
     text-align: left;
-  }
-
-  .logo-showcase {
-    position: relative;
-    padding: 2rem;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    width: 250px;
-    height: 250px;
-  }
-
-  .hero-logo {
-    width: 150px;
-    z-index: 1;
-  }
-
-  .logo-circuit-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 215, 0, 0.2);
-    animation: rotate 20s linear infinite;
-  }
-
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
   }
 
   .hero-text {
     max-width: 600px;
   }
 
-  .hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1rem;
+  .hero-title-visual {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
-  .hero-subtitle {
-    display: block;
-    font-size: 2rem;
-    color: #c0c0c0;
-    font-weight: 400;
+  .hero-title-logo-image {
+    width: 100px;
+    height: auto;
+    margin-bottom: 8px;
+  }
+
+  .hero-title-name-image {
+    width: 280px;
+    height: auto;
   }
 
   .hero-tagline {
@@ -475,11 +445,21 @@
   }
 
   .cta-primary {
-    color: #111;
+    background: linear-gradient(135deg, #D4AF37 0%, #B48811 100%);
+    color: #0D0D0D;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
   }
 
-  .cta-primary .gold-gradient {
-    -webkit-text-fill-color: initial;
+  .cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
   }
 
   .cta-secondary {
@@ -654,9 +634,6 @@
     padding: 0.8rem 1.5rem;
     font-size: 0.9rem;
     font-weight: 600;
-  }
-  .demo-cta .gold-gradient {
-    -webkit-text-fill-color: initial;
   }
 
   /* Solutions Section */
