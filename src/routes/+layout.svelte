@@ -1,6 +1,85 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   
+  type Point = { x: number, y: number };
+  type Path = { start: Point, end: Point };
+
+  class Particle {
+    x: number = 0;
+    y: number = 0;
+    path: Path | null = null;
+    progress: number = 0;
+    forwards: boolean = true;
+    lifetime: number = 0;
+    alpha: number = 1;
+
+    constructor(circuitPaths: Path[]) {
+      this.reset(circuitPaths);
+    }
+
+    reset(circuitPaths: Path[]) {
+      if (circuitPaths.length === 0) return;
+      const pathIndex = Math.floor(Math.random() * circuitPaths.length);
+      this.path = circuitPaths[pathIndex];
+      this.progress = Math.random();
+      this.forwards = Math.random() > 0.5;
+      this.updatePosition();
+      this.lifetime = 1000 + Math.random() * 1000; // 1-2 seconds
+      this.alpha = 1;
+    }
+
+    updatePosition() {
+      if (!this.path) return;
+      const p = this.forwards ? this.progress : 1 - this.progress;
+      this.x = this.path.start.x + (this.path.end.x - this.path.start.x) * p;
+      this.y = this.path.start.y + (this.path.end.y - this.path.start.y) * p;
+    }
+
+    findNextPath(circuitPaths: Path[]) {
+      if (!this.path) { this.reset(circuitPaths); return; }
+      const endPoint = this.forwards ? this.path.end : this.path.start;
+      const connectedPaths = circuitPaths.filter(p => (p.start === endPoint || p.end === endPoint) && p !== this.path);
+
+      if (connectedPaths.length > 0) {
+        this.path = connectedPaths[Math.floor(Math.random() * connectedPaths.length)];
+        this.forwards = this.path.start === endPoint;
+        this.progress = 0;
+      } else {
+        this.reset(circuitPaths);
+      }
+    }
+
+    update(ctx: CanvasRenderingContext2D, particleSpeed: number, circuitPaths: Path[], deltaTime: number) {
+      if (!this.path || !ctx) return;
+      
+      this.lifetime -= deltaTime;
+      if (this.lifetime <= 0) {
+        this.reset(circuitPaths);
+      }
+      
+      const pathLength = Math.hypot(this.path.end.x - this.path.start.x, this.path.end.y - this.path.start.y);
+      if(pathLength > 0) {
+          this.progress += particleSpeed / pathLength;
+      }
+
+      if (this.progress >= 1) {
+        this.findNextPath(circuitPaths);
+      }
+
+      this.updatePosition();
+
+      this.alpha = Math.min(1.0, this.lifetime / 500.0);
+
+      ctx.fillStyle = `rgba(255, 215, 100, ${0.8 * this.alpha})`;
+      ctx.shadowColor = `rgba(255, 215, 0, ${this.alpha})`;
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+  
   onMount(() => {
     // Simple electrical effects without canvas
     createSimpleEffects();
@@ -12,15 +91,86 @@
   function setupPcbAnimation() {
     const canvas = document.getElementById('pcb-canvas') as HTMLCanvasElement;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let width: number, height: number, dpr: number;
     let particles: Particle[] = [];
-    const numParticles = 60;
-    const particleSpeed = 0.6;
-    const gridSize = 20;
+    const numParticles = 30;
+    const particleSpeed = 0.5;
+
+    let circuitPaths: Path[] = [];
+    let nodes = new Map<string, Point>();
+
+    function getNodeKey(p: Point) {
+      return `${p.x},${p.y}`;
+    }
+
+    function createCircuitLayout() {
+      circuitPaths = [];
+      nodes.clear();
+      const gridSize = 40;
+      const cols = Math.floor(width / gridSize);
+      const rows = Math.floor(height / gridSize);
+
+      for (let y = 0; y <= rows; y++) {
+        for (let x = 0; x <= cols; x++) {
+          const point = { x: x * gridSize, y: y * gridSize };
+          nodes.set(getNodeKey(point), point);
+        }
+      }
+
+      for (const node of nodes.values()) {
+        const x = node.x / gridSize;
+        const y = node.y / gridSize;
+
+        if (x < cols && Math.random() > 0.5) {
+          const rightNeighbor = nodes.get(getNodeKey({x: (x + 1) * gridSize, y: node.y}));
+          if (rightNeighbor) circuitPaths.push({ start: node, end: rightNeighbor });
+        }
+        if (y < rows && Math.random() > 0.5) {
+          const bottomNeighbor = nodes.get(getNodeKey({x: node.x, y: (y + 1) * gridSize}));
+          if (bottomNeighbor) circuitPaths.push({ start: node, end: bottomNeighbor });
+        }
+      }
+    }
+
+    function drawStaticBoard() {
+      if (!ctx) return;
+      ctx.strokeStyle = 'rgba(218, 165, 32, 0.08)';
+      ctx.lineWidth = 0.7;
+      circuitPaths.forEach(path => {
+        ctx.beginPath();
+        ctx.moveTo(path.start.x, path.start.y);
+        ctx.lineTo(path.end.x, path.end.y);
+        ctx.stroke();
+      });
+    }
+
+    function init() {
+      resize();
+      createCircuitLayout();
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle(circuitPaths));
+      }
+    }
+
+    let lastTime = 0;
+    function animate(time = 0) {
+      if (!ctx) return;
+      
+      const deltaTime = time - lastTime;
+      lastTime = time;
+
+      ctx.fillStyle = 'rgba(13, 13, 13, 0.2)';
+      ctx.fillRect(0, 0, width, height);
+
+      drawStaticBoard();
+
+      particles.forEach(p => p.update(ctx, particleSpeed, circuitPaths, deltaTime));
+      requestAnimationFrame(animate);
+    }
 
     function resize() {
       if (!ctx) return;
@@ -32,94 +182,11 @@
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.scale(dpr, dpr);
-      
-      ctx.strokeStyle = 'rgba(218, 165, 32, 0.1)';
-      ctx.lineWidth = 0.2;
-    }
-
-    class Particle {
-      x: number = 0;
-      y: number = 0;
-      dx: number = 0;
-      dy: number = 0;
-      distanceToTurn: number = 0;
-      distanceTraveled: number = 0;
-
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        const angle = Math.floor(Math.random() * 4) * (Math.PI / 2);
-        this.dx = Math.cos(angle);
-        this.dy = Math.sin(angle);
-        this.distanceToTurn = Math.random() * 100 + 50;
-        this.distanceTraveled = 0;
-      }
-
-      update() {
-        if (!ctx) return;
-        const lastX = this.x;
-        const lastY = this.y;
-        
-        this.x += this.dx * particleSpeed;
-        this.y += this.dy * particleSpeed;
-        this.distanceTraveled += particleSpeed;
-
-        // Draw the trail
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
-
-        // Draw the sprite head
-        ctx.fillStyle = 'rgba(255, 215, 100, 0.4)';
-        ctx.shadowColor = '#FFD700';
-        ctx.shadowBlur = 2;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-          this.reset();
-        }
-
-        if (this.distanceTraveled >= this.distanceToTurn) {
-            const turnDirection = Math.random() < 0.5 ? 1 : -1;
-            const newDx = -this.dy * turnDirection;
-            const newDy = this.dx * turnDirection;
-            this.dx = newDx;
-            this.dy = newDy;
-            this.distanceTraveled = 0;
-            this.distanceToTurn = Math.random() * 100 + 50;
-        }
-      }
-    }
-
-    function init() {
-      resize();
-      particles = [];
-      for (let i = 0; i < numParticles; i++) {
-        particles.push(new Particle());
-      }
-    }
-
-    function animate() {
-      if (!ctx) return;
-      // Set the fill style for the fade effect on each frame
-      ctx.fillStyle = 'rgba(13, 13, 13, 0.25)';
-      ctx.fillRect(0, 0, width, height); // Apply fade
-
-      particles.forEach(p => p.update());
-      requestAnimationFrame(animate);
     }
 
     window.addEventListener('resize', init);
     init();
-    animate();
+    requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', init);
@@ -137,6 +204,12 @@
         }
       });
     }, 2000);
+  }
+
+  let isChatOpen = false;
+
+  function toggleChat() {
+    isChatOpen = !isChatOpen;
   }
 </script>
 
@@ -163,7 +236,7 @@
         <a href="#about" class="nav-link">About</a>
         <a href="#contact" class="nav-link">Contact</a>
       </div>
-      <button class="nav-cta">Get Started</button>
+      <button class="nav-cta">Let's Go!</button>
     </div>
   </nav>
   
@@ -196,6 +269,29 @@
       </div>
     </div>
   </footer>
+
+  <!-- Chat Nub -->
+  <div class="chat-nub-container">
+    
+    <button class="chat-nub-button" on:click={toggleChat}>
+      <img src="/logoold.png" alt="Chat Agent" />
+    </button>
+    {#if isChatOpen}
+      <div class="chat-window glass-panel">
+        <div class="chat-header">
+          <h4 class="gold-gradient">SPARQ AI Assistant</h4>
+          <button class="close-chat" on:click={toggleChat}>&times;</button>
+        </div>
+        <div class="chat-body">
+          <p>AI agent integration coming soon...</p>
+        </div>
+        <div class="chat-footer">
+            <input type="text" placeholder="Type your message..." />
+            <button>Send</button>
+        </div>
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style>
@@ -237,7 +333,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(ellipse at center, rgba(13, 13, 13, 0.9) 25%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(13, 13, 13, 0.95) 25%, rgba(13, 13, 13, 0.2) 75%);
     pointer-events: none;
   }
   
@@ -475,5 +571,148 @@
       grid-template-columns: 1fr;
       text-align: center;
     }
+  }
+
+  /* Chat Nub */
+  .chat-nub-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+
+  .chat-nub-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    background: transparent;
+  }
+  
+  .chat-nub-button:hover {
+    transform: scale(1.1);
+  }
+
+  .chat-nub-button img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+  }
+  
+  .chat-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(218, 165, 32, 0.1);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+    border-radius: 8px;
+    color: #DAA520;
+    animation: fade-in 0.5s ease;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .chat-window {
+    position: absolute;
+    bottom: calc(100% + 1rem);
+    right: 0;
+    width: 350px;
+    max-width: 90vw;
+    height: 500px;
+    max-height: 70vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom right;
+    animation: open-chat 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes open-chat {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+  }
+
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(22, 28, 45, 0.7);
+    border-bottom: 1px solid rgba(184, 134, 11, 0.25);
+    flex-shrink: 0;
+  }
+
+  .chat-header h4 {
+    font-weight: 600;
+  }
+
+  .close-chat {
+    background: none;
+    border: none;
+    color: #B0B0B0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+  }
+  
+  .close-chat:hover {
+    color: #DAA520;
+  }
+
+  .chat-body {
+    flex-grow: 1;
+    padding: 1rem;
+    background: rgba(13, 13, 13, 0.8);
+    color: #E8E8E8;
+    overflow-y: auto;
+  }
+  
+  .chat-footer {
+    display: flex;
+    padding: 0.75rem;
+    border-top: 1px solid rgba(184, 134, 11, 0.25);
+    background: rgba(22, 28, 45, 0.7);
+    flex-shrink: 0;
+  }
+  
+  .chat-footer input {
+    flex-grow: 1;
+    background: rgba(13, 13, 13, 0.9);
+    border: 1px solid rgba(184, 134, 11, 0.25);
+    border-radius: 6px;
+    padding: 0.5rem;
+    color: #E8E8E8;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .chat-footer input::placeholder {
+    color: #888;
+  }
+  
+  .chat-footer button {
+    background: #DAA520;
+    border: none;
+    color: #0D0D0D;
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
   }
 </style> 

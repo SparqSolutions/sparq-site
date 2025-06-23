@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
   
   let currentDemo = 0;
   let demoInterval: NodeJS.Timeout;
@@ -8,20 +9,17 @@
     {
       title: "Social Media Outreach",
       description: "AI agents that automate social media engagement, schedule posts, and analyze audience sentiment.",
-      features: ["Automated Posting", "Sentiment Analysis", "Engagement Tracking"],
-      status: "Live Demo"
+      features: ["Automated Posting", "Sentiment Analysis", "Engagement Tracking"]
     },
     {
       title: "AI Content Generation",
       description: "Generate high-quality blog posts, articles, and marketing copy tailored to your brand's voice.",
-      features: ["SEO Optimization", "Multiple Formats", "Brand Voice Matching"],
-      status: "Interactive Demo"
+      features: ["SEO Optimization", "Multiple Formats", "Brand Voice Matching"]
     },
     {
       title: "Webpage Chat Agents",
       description: "Intelligent chat agents to handle customer inquiries, schedule appointments, and capture leads 24/7.",
-      features: ["Lead Capture", "Appointment Scheduling", "Instant Responses"],
-      status: "Simulation Ready"
+      features: ["Lead Capture", "Appointment Scheduling", "Instant Responses"]
     }
   ];
   
@@ -33,17 +31,6 @@
     
     return () => clearInterval(demoInterval);
   });
-  
-  function selectDemo(index: number) {
-    currentDemo = index;
-    clearInterval(demoInterval);
-    // Restart auto-rotation after manual selection
-    setTimeout(() => {
-      demoInterval = setInterval(() => {
-        currentDemo = (currentDemo + 1) % aiDemos.length;
-      }, 5000);
-    }, 10000);
-  }
 </script>
 
 <svelte:head>
@@ -69,17 +56,14 @@
           
           <div class="hero-stats">
             <div class="stat-item spark-target">
-              <span class="stat-number gold-gradient">100+</span>
-              <span class="stat-label">SMBs Empowered</span>
+              <span class="stat-number gold-gradient">3</span>
+              <span class="stat-label">Active Deployments</span>
             </div>
             <div class="stat-item spark-target">
               <span class="stat-number gold-gradient">24/7</span>
               <span class="stat-label">Agent Availability</span>
             </div>
-            <div class="stat-item spark-target">
-              <span class="stat-number gold-gradient">500+</span>
-              <span class="stat-label">Active AI Agents</span>
-            </div>
+            
           </div>
           
           <div class="hero-actions">
@@ -103,70 +87,34 @@
         See how our AI agents can work for your business. Each demo highlights a key area where we can help you grow.
       </p>
       
-      <div class="demos-interface">
-        <div class="demo-selector">
-          {#each aiDemos as demo, index}
-            <button 
-              class="demo-tab {currentDemo === index ? 'active' : ''} glass-panel interactive-card spark-target"
-              on:click={() => selectDemo(index)}
-            >
-              <span class="demo-tab-title">{demo.title}</span>
-              <span class="demo-status {demo.status.toLowerCase().replace(' ', '-')}">{demo.status}</span>
-            </button>
-          {/each}
-        </div>
-        
-        <div class="demo-display glass-panel">
-          <div class="demo-header">
-            <h3 class="demo-title gold-gradient">{aiDemos[currentDemo].title}</h3>
-            <div class="demo-indicators">
-              <span class="indicator active spark-target">Neural Processing</span>
-              <span class="indicator active spark-target">Real-time Analysis</span>
-              <span class="indicator active spark-target">Enterprise Ready</span>
-            </div>
-          </div>
-          
-          <div class="demo-content">
-            <div class="demo-visual">
-              <div class="neural-network-viz">
-                <div class="network-layer input-layer">
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                </div>
-                <div class="network-layer hidden-layer">
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                </div>
-                <div class="network-layer output-layer">
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                  <div class="neuron spark-target"></div>
-                </div>
-              </div>
+      <div class="rotating-demo-window glass-panel">
+        {#key currentDemo}
+          <div class="demo-card" in:fade={{ duration: 500, delay: 200 }} out:fade={{ duration: 300 }}>
+            
+            <div class="demo-header">
+              <h3 class="demo-title gold-gradient">{aiDemos[currentDemo].title}</h3>
             </div>
             
-            <div class="demo-info">
-              <p class="demo-description">{aiDemos[currentDemo].description}</p>
-              <div class="demo-features">
-                <h4>Key Capabilities:</h4>
-                <ul>
-                  {#each aiDemos[currentDemo].features as feature}
-                    <li class="spark-target">{feature}</li>
-                  {/each}
-                </ul>
-              </div>
-              <button class="demo-cta glass-panel interactive-card">
-                <span class="gold-gradient">Launch Interactive Demo</span>
-              </button>
+            <p class="demo-description">{aiDemos[currentDemo].description}</p>
+            
+            <div class="demo-features">
+              <ul>
+                {#each aiDemos[currentDemo].features as feature}
+                  <li class="spark-target">{feature}</li>
+                {/each}
+              </ul>
             </div>
+
+            <div class="demo-visual-background">
+              <div class="neural-network-viz">
+                <div class="network-layer input-layer"><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div></div>
+                <div class="network-layer hidden-layer"><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div></div>
+                <div class="network-layer output-layer"><div class="neuron spark-target"></div><div class="neuron spark-target"></div><div class="neuron spark-target"></div></div>
+              </div>
+            </div>
+
           </div>
-        </div>
+        {/key}
       </div>
     </div>
   </section>
@@ -365,7 +313,7 @@
     display: flex;
     align-items: center;
     gap: 3rem;
-    text-align: left;
+    text-align: center;
     justify-content: center;
   }
 
@@ -376,18 +324,19 @@
   .hero-title-visual {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
   .hero-title-logo-image {
-    width: 100px;
+    width: 120px;
     height: auto;
     margin-bottom: 8px;
   }
 
   .hero-title-name-image {
-    width: 280px;
+    width: 320px;
     height: auto;
   }
 
@@ -407,6 +356,7 @@
 
   .hero-stats {
     display: flex;
+    justify-content: center;
     gap: 2rem;
     margin-bottom: 2.5rem;
   }
@@ -432,6 +382,7 @@
 
   .hero-actions {
     display: flex;
+    justify-content: center;
     gap: 1.5rem;
   }
 
@@ -485,95 +436,78 @@
   }
 
   /* Demos Section */
-  .demos-interface {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 2rem;
-    align-items: flex-start;
+  .rotating-demo-window {
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .demo-selector {
+  .demo-card {
+    text-align: center;
+    position: absolute;
+    z-index: 2;
+  }
+  
+  .demo-header {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .demo-title {
+    font-size: 2rem;
+  }
+
+  .demo-description {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    font-size: 1.1rem;
+    color: #c0c0c0;
+    line-height: 1.6;
+  }
+
+  .demo-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1rem;
   }
 
-  .demo-tab {
-    width: 100%;
-    padding: 1.2rem;
-    text-align: left;
-    background: rgba(22, 28, 45, 0.4);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    color: #fff;
-    cursor: pointer;
-  }
-
-  .demo-tab.active {
-    background: rgba(255, 215, 0, 0.1);
-    border-left: 4px solid #ffd700;
-  }
-
-  .demo-tab-title {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .demo-status {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.3rem;
-    background: #444;
-    color: #fff;
-  }
-  .demo-status.live-demo { background: #28a745; }
-  .demo-status.interactive-demo { background: #17a2b8; }
-  .demo-status.simulation-ready { background: #ffc107; color: #111; }
-
-  .demo-display {
-    padding: 2rem;
-    min-height: 400px;
-  }
-
-  .demo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-  }
-
-  .demo-title {
-    font-size: 1.8rem;
-  }
-
-  .demo-indicators {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .indicator {
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.3rem;
-    font-size: 0.8rem;
-    background: rgba(255, 215, 0, 0.1);
+  .demo-features li {
+    padding: 0.6rem 1.2rem;
+    position: relative;
     color: #ffd700;
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: 8px;
+    font-weight: 600;
   }
 
-  .demo-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: center;
+  .demo-visual-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.08;
   }
 
   .neural-network-viz {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    height: 200px;
+    height: 100%;
     position: relative;
   }
 
@@ -582,6 +516,7 @@
     flex-direction: column;
     gap: 1rem;
   }
+
   .neuron {
     width: 20px;
     height: 20px;
@@ -596,45 +531,6 @@
   }
   .hidden-layer .neuron { animation-delay: 0.5s; }
   .output-layer .neuron { animation-delay: 1s; }
-
-
-  .demo-info {
-    text-align: left;
-  }
-  .demo-description {
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-    color: #c0c0c0;
-  }
-  .demo-features h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.8rem;
-  }
-  .demo-features ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.5rem 0;
-  }
-  .demo-features li {
-    padding-left: 1.5rem;
-    position: relative;
-    margin-bottom: 0.5rem;
-    color: #c0c0c0;
-  }
-  .demo-features li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: #ffd700;
-  }
-
-  .demo-cta {
-    padding: 0.8rem 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
 
   /* Solutions Section */
   .solutions-grid {
