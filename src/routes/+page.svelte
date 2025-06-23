@@ -40,7 +40,7 @@
 
 <div class="homepage">
   <!-- Hero Section -->
-  <section class="hero-section">
+  <section class="hero-section" id="home">
     <div class="hero-container">
       <div class="hero-content">
         <div class="hero-text">
@@ -67,12 +67,12 @@
           </div>
           
           <div class="hero-actions">
-            <button class="cta-primary glass-panel interactive-card">
+            <a href="/#demos" class="cta-primary glass-panel interactive-card">
               <span>Explore AI Demos</span>
-            </button>
-            <button class="cta-secondary interactive-card">
+            </a>
+            <a href="/schedule" class="cta-secondary interactive-card">
               <span>Schedule Consultation</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -80,11 +80,11 @@
   </section>
   
   <!-- AI Demos Section -->
-  <section class="demos-section">
+  <section class="demos-section" id="demos">
     <div class="section-container">
-      <h2 class="section-title gold-gradient">Our AI Solutions in Action</h2>
+      <h2 class="section-title gold-gradient">Infinite possibilities with Agentic Deployment</h2>
       <p class="section-subtitle">
-        See how our AI agents can work for your business. Each demo highlights a key area where we can help you grow.
+        See how our AI agents can work for your business. Automation in key areas help you grow.
       </p>
       
       <div class="rotating-demo-window glass-panel">
@@ -120,7 +120,7 @@
   </section>
   
   <!-- Solutions Overview -->
-  <section class="solutions-section">
+  <section class="solutions-section" id="solutions">
     <div class="section-container">
       <h2 class="section-title gold-gradient">Solutions for Your Business</h2>
       <p class="section-subtitle">
@@ -213,7 +213,7 @@
   </section>
 
   <!-- About Us Section -->
-  <section class="about-section">
+  <section class="about-section" id="about">
     <div class="section-container">
       <div class="about-content">
         <div class="about-text">
@@ -224,9 +224,9 @@
           <p>
             Our team of experts has a deep understanding of both AI technology and the challenges that small businesses face. We work closely with you to understand your goals and develop a customized AI strategy that delivers real results.
           </p>
-          <button class="cta-secondary interactive-card">
+          <a href="/#about" class="cta-secondary interactive-card">
             <span>Learn More About Our Mission</span>
-          </button>
+          </a>
         </div>
         <div class="about-visual glass-panel interactive-card">
           <img src="/team-photo.jpg" alt="The SPARQ Team" class="about-image" />
@@ -239,7 +239,7 @@
   </section>
 
   <!-- Call to Action -->
-  <section class="cta-section">
+  <section class="cta-section" id="contact">
     <div class="section-container">
       <div class="cta-content glass-panel">
         <div class="cta-text">
@@ -249,9 +249,9 @@
           </p>
         </div>
         <div class="cta-action">
-          <button class="cta-primary glass-panel interactive-card">
+          <a href="/schedule" class="cta-primary glass-panel interactive-card">
             <span class="gold-gradient">Schedule Free Consultation</span>
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -393,6 +393,8 @@
     border-radius: 0.5rem;
     cursor: pointer;
     border: none;
+    text-decoration: none;
+    display: inline-block;
   }
 
   .cta-primary {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   
   type Point = { x: number, y: number };
   type Path = { start: Point, end: Point };
@@ -85,7 +86,35 @@
     createSimpleEffects();
     
     // Generative PCB background
-    setupPcbAnimation();
+    const pcbCleanup = setupPcbAnimation();
+
+    const smoothScrollHandler = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const link = target.closest('a[href^="/#"]');
+
+      if (link) {
+        event.preventDefault();
+        const href = link.getAttribute('href');
+        if (href) {
+          const selector = href.substring(1); // e.g., /#home -> #home
+          const element = document.querySelector(selector);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }
+    };
+
+    if (browser) {
+      document.body.addEventListener('click', smoothScrollHandler);
+    }
+    
+    return () => {
+      if (pcbCleanup) pcbCleanup();
+      if (browser) {
+        document.body.removeEventListener('click', smoothScrollHandler);
+      }
+    };
   });
   
   function setupPcbAnimation() {
@@ -230,13 +259,13 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-links">
-        <a href="#home" class="nav-link active">Home</a>
-        <a href="#solutions" class="nav-link">Solutions</a>
-        <a href="#demos" class="nav-link">AI Demos</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#contact" class="nav-link">Contact</a>
+        <a href="/#home" class="nav-link active">Home</a>
+        <a href="/#solutions" class="nav-link">Solutions</a>
+        <a href="/#demos" class="nav-link">AI Demos</a>
+        <a href="/#about" class="nav-link">About</a>
+        <a href="/#contact" class="nav-link">Contact</a>
       </div>
-      <button class="nav-cta">Let's Go!</button>
+      <a href="/#contact" class="nav-cta">Let's Go!</a>
     </div>
   </nav>
   
