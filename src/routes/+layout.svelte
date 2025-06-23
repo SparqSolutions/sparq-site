@@ -260,8 +260,9 @@
     <div class="nav-container">
       <div class="nav-links">
         <a href="/#home" class="nav-link active">Home</a>
-        <a href="/#solutions" class="nav-link">Solutions</a>
         <a href="/#demos" class="nav-link">AI Demos</a>
+        <a href="/#solutions" class="nav-link">Solutions</a>
+
         <a href="/#about" class="nav-link">About</a>
         <a href="/#contact" class="nav-link">Contact</a>
       </div>

@@ -70,7 +70,7 @@
             <a href="/#demos" class="cta-primary glass-panel interactive-card">
               <span>Explore AI Demos</span>
             </a>
-            <a href="/schedule" class="cta-secondary interactive-card">
+            <a href="/#contact" class="cta-secondary interactive-card">
               <span>Schedule Consultation</span>
             </a>
           </div>
@@ -250,7 +250,7 @@
         </div>
         <div class="cta-action">
           <a href="/schedule" class="cta-primary glass-panel interactive-card">
-            <span class="gold-gradient">Schedule Free Consultation</span>
+            <span>Schedule Free Consultation</span>
           </a>
         </div>
       </div>
