@@ -5,6 +5,78 @@
   type Point = { x: number, y: number };
   type Path = { start: Point, end: Point };
 
+  // Chat functionality variables
+  let chatInput = '';
+  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/chat'; // <-- Replace with your test URL
+  let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
+  let isSending = false;
+
+  // Chat functions
+  async function sendMessage() {
+    if (!chatInput.trim()) return;
+    const message = chatInput;
+    chatMessages = [...chatMessages, { from: 'user', text: message }];
+    chatInput = '';
+    isSending = true;
+    
+    try {
+      console.log('Sending message to n8n:', message);
+      
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
+      const res = await fetch(n8nUrl, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ message }),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      console.log('Response status:', res.status);
+      console.log('Response headers:', res.headers);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
+      const data = await res.json();
+      console.log('Response data:', data);
+      
+      // Handle different response formats
+      const botReply = data.reply || data.response || data.message || data.text || data.content || 'No response received';
+      chatMessages = [...chatMessages, { from: 'bot', text: botReply }];
+      
+    } catch (e: any) {
+      console.error('Error sending message:', e);
+      
+      let errorMessage = 'Error contacting server.';
+      if (e.name === 'AbortError') {
+        errorMessage = 'Request timed out. Please try again.';
+      } else if (e.message?.includes('Failed to fetch')) {
+        errorMessage = 'Network error. Check your connection.';
+      } else if (e.message?.includes('HTTP error')) {
+        errorMessage = `Server error: ${e.message}`;
+      }
+      
+      chatMessages = [...chatMessages, { from: 'bot', text: errorMessage }];
+    } finally {
+      isSending = false;
+    }
+  }
+
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
   class Particle {
     x: number = 0;
     y: number = 0;
@@ -313,11 +385,26 @@
           <button class="close-chat" on:click={toggleChat}>&times;</button>
         </div>
         <div class="chat-body">
-          <p>AI agent integration coming soon...</p>
+          {#each chatMessages as msg}
+            <div class="chat-message {msg.from}">
+              <span>{msg.text}</span>
+            </div>
+          {/each}
+          {#if isSending}
+            <div class="chat-message bot">
+              <span>Typing...</span>
+            </div>
+          {/if}
         </div>
         <div class="chat-footer">
-            <input type="text" placeholder="Type your message..." />
-            <button>Send</button>
+            <input 
+              type="text" 
+              placeholder="Type your message..." 
+              bind:value={chatInput}
+              on:keydown={handleKeyDown}
+              disabled={isSending}
+            />
+            <button on:click={sendMessage} disabled={isSending || !chatInput.trim()}>Send</button>
         </div>
       </div>
     {/if}
@@ -713,6 +800,32 @@
     overflow-y: auto;
   }
   
+  /* Custom scrollbar styling */
+  .chat-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .chat-body::-webkit-scrollbar-track {
+    background: rgba(13, 13, 13, 0.3);
+    border-radius: 3px;
+  }
+  
+  .chat-body::-webkit-scrollbar-thumb {
+    background: rgba(218, 165, 32, 0.4);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+  
+  .chat-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(218, 165, 32, 0.6);
+  }
+  
+  /* Firefox scrollbar */
+  .chat-body {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(218, 165, 32, 0.4) rgba(13, 13, 13, 0.3);
+  }
+  
   .chat-footer {
     display: flex;
     padding: 0.75rem;
@@ -744,5 +857,37 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
+  }
+
+  .chat-footer button:disabled {
+    background: #666;
+    cursor: not-allowed;
+  }
+
+  .chat-message {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    max-width: 85%;
+    word-wrap: break-word;
+  }
+
+  .chat-message.user {
+    background: rgba(218, 165, 32, 0.2);
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .chat-message.bot {
+    background: rgba(13, 13, 13, 0.6);
+    border: 1px solid rgba(184, 134, 11, 0.2);
+    margin-right: auto;
+  }
+
+  .chat-message span {
+    color: #E8E8E8;
+    font-size: 0.9rem;
+    line-height: 1.4;
   }
 </style> 

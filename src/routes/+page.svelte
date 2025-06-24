@@ -292,7 +292,7 @@
 
   .interactive-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 40px 0 rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0px 80px 0 rgba(255, 215, 0, 0.5);
     border-color: rgba(255, 215, 0, 0.3);
   }
 
