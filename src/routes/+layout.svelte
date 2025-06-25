@@ -7,9 +7,10 @@
 
   // Chat functionality variables
   let chatInput = '';
-  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/chat'; // <-- Replace with your test URL
+  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/74535101-9017-471c-8a64-af87b7665862';
   let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
   let isSending = false;
+  let sessionId = '';
 
   // Chat functions
   async function sendMessage() {
@@ -20,9 +21,10 @@
     isSending = true;
     
     try {
-      console.log('Sending message to n8n:', message);
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+      }
       
-      // Create AbortController for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
       
@@ -30,7 +32,8 @@
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'sessionId': sessionId
         },
         body: JSON.stringify({ message }),
         signal: controller.signal
@@ -38,23 +41,16 @@
       
       clearTimeout(timeoutId);
       
-      console.log('Response status:', res.status);
-      console.log('Response headers:', res.headers);
-      
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       
       const data = await res.json();
-      console.log('Response data:', data);
       
-      // Handle different response formats
       const botReply = data.reply || data.response || data.message || data.text || data.content || 'No response received';
       chatMessages = [...chatMessages, { from: 'bot', text: botReply }];
       
     } catch (e: any) {
-      console.error('Error sending message:', e);
-      
       let errorMessage = 'Error contacting server.';
       if (e.name === 'AbortError') {
         errorMessage = 'Request timed out. Please try again.';
@@ -238,7 +234,7 @@
 
     function drawStaticBoard() {
       if (!ctx) return;
-      ctx.strokeStyle = 'rgba(218, 165, 32, 0.08)';
+      ctx.strokeStyle = 'rgba(218, 165, 32, 0.2)';
       ctx.lineWidth = 0.7;
       circuitPaths.forEach(path => {
         ctx.beginPath();
@@ -264,7 +260,7 @@
       const deltaTime = time - lastTime;
       lastTime = time;
 
-      ctx.fillStyle = 'rgba(13, 13, 13, 0.2)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
       ctx.fillRect(0, 0, width, height);
 
       drawStaticBoard();
@@ -324,7 +320,6 @@
   <!-- Advanced PCB Background -->
   <div class="pcb-background">
     <canvas id="pcb-canvas"></canvas>
-    <div class="occlusion-vignette"></div>
   </div>
   
   <!-- Navigation -->
@@ -374,7 +369,6 @@
 
   <!-- Chat Nub -->
   <div class="chat-nub-container">
-    
     <button class="chat-nub-button" on:click={toggleChat}>
       <img src="/logoold.png" alt="Chat Agent" />
     </button>
@@ -420,8 +414,8 @@
   
   :global(body) {
     font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0D0D0D;
-    color: #E8E8E8;
+    background: #FFFFFF;
+    color: #333333;
     overflow-x: hidden;
     line-height: 1.6;
   }
@@ -429,9 +423,7 @@
   .app-container {
     position: relative;
     min-height: 100vh;
-    background: 
-      radial-gradient(ellipse at top, rgba(24, 24, 24, 0.8) 0%, rgba(13, 13, 13, 1) 100%),
-      linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 25%, #0F0F0F 50%, #1D1D1D 75%, #0D0D0D 100%);
+    background: transparent;
   }
   
   .pcb-background {
@@ -445,13 +437,7 @@
   }
   
   .occlusion-vignette {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, rgba(13, 13, 13, 0.95) 25%, rgba(13, 13, 13, 0.2) 75%);
-    pointer-events: none;
+    /* Style removed for light theme */
   }
   
   #pcb-canvas {
@@ -467,9 +453,8 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: rgba(13, 13, 13, 0.95);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(184, 134, 11, 0.25);
   }
   
   .nav-container {
@@ -509,7 +494,7 @@
   }
   
   .nav-link {
-    color: #B0B0B0;
+    color: #666666;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -518,7 +503,7 @@
   
   .nav-link:hover,
   .nav-link.active {
-    color: #DAA520;
+    color: #B8860B;
   }
   
   .nav-link.active::after {
@@ -555,8 +540,8 @@
   
   /* Footer */
   .main-footer {
-    background: rgba(13, 13, 13, 0.98);
-    border-top: 1px solid rgba(184, 134, 11, 0.25);
+    background: rgba(255, 255, 255, 0.98);
+    border-top: 1px solid rgba(184, 134, 11, 0.15);
     padding: 3rem 0 1.5rem;
     margin-top: 4rem;
     position: relative;
@@ -587,13 +572,13 @@
   }
   
   .footer-section a {
-    color: #B0B0B0;
+    color: #666666;
     text-decoration: none;
     transition: color 0.3s ease;
   }
   
   .footer-section a:hover {
-    color: #DAA520;
+    color: #B8860B;
   }
   
   /* Global utility classes */
@@ -605,13 +590,13 @@
   }
   
   :global(.glass-panel) {
-    background: rgba(26, 26, 26, 0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(184, 134, 11, 0.1);
     border-radius: 12px;
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(218, 165, 32, 0.1);
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(218, 165, 32, 0.05);
   }
   
   :global(.interactive-card) {
@@ -690,6 +675,40 @@
     }
   }
 
+  :global(#n8n-chat) {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.n8n-chat-footer) {
+    display: none !important;
+  }
+
+  :global(.n8n-chat-header) {
+    display: none !important;
+  }
+
+  :global(.n8n-chat-messages) {
+    background: transparent !important;
+  }
+
+  :global(.n8n-chat-input-container) {
+    background: transparent !important;
+  }
+
+	:global(.n8n-chat-message-bot .n8n-chat-message-text) {
+		background: rgba(245, 245, 245, 0.9) !important;
+    border: 1px solid rgba(184, 134, 11, 0.1) !important;
+	}
+
+	:global(.n8n-chat-message-user .n8n-chat-message-text) {
+		background: rgba(218, 165, 32, 0.1) !important;
+    border: 1px solid rgba(218, 165, 32, 0.2) !important;
+	}
+
   /* Chat Nub */
   .chat-nub-container {
     position: fixed;
@@ -757,6 +776,7 @@
     overflow: hidden;
     transform-origin: bottom right;
     animation: open-chat 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.95);
   }
 
   @keyframes open-chat {
@@ -769,7 +789,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: rgba(22, 28, 45, 0.7);
+    background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(184, 134, 11, 0.25);
     flex-shrink: 0;
   }
@@ -795,8 +815,8 @@
   .chat-body {
     flex-grow: 1;
     padding: 1rem;
-    background: rgba(13, 13, 13, 0.8);
-    color: #E8E8E8;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333333;
     overflow-y: auto;
   }
   
@@ -830,17 +850,17 @@
     display: flex;
     padding: 0.75rem;
     border-top: 1px solid rgba(184, 134, 11, 0.25);
-    background: rgba(22, 28, 45, 0.7);
+    background: rgba(255, 255, 255, 0.9);
     flex-shrink: 0;
   }
   
   .chat-footer input {
     flex-grow: 1;
-    background: rgba(13, 13, 13, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(184, 134, 11, 0.25);
     border-radius: 6px;
     padding: 0.5rem;
-    color: #E8E8E8;
+    color: #333333;
     font-family: 'Orbitron', sans-serif;
   }
 
@@ -873,20 +893,20 @@
   }
 
   .chat-message.user {
-    background: rgba(218, 165, 32, 0.2);
-    border: 1px solid rgba(218, 165, 32, 0.3);
+    background: rgba(218, 165, 32, 0.1);
+    border: 1px solid rgba(218, 165, 32, 0.2);
     margin-left: auto;
     text-align: right;
   }
 
   .chat-message.bot {
-    background: rgba(13, 13, 13, 0.6);
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    background: rgba(245, 245, 245, 0.9);
+    border: 1px solid rgba(184, 134, 11, 0.1);
     margin-right: auto;
   }
 
   .chat-message span {
-    color: #E8E8E8;
+    color: #333333;
     font-size: 0.9rem;
     line-height: 1.4;
   }

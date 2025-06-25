@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   
   let currentDemo = 0;
-  let demoInterval: NodeJS.Timeout;
+  let demoInterval: number;
   
   const aiDemos = [
     {
@@ -130,7 +130,7 @@
       <div class="solutions-grid">
         <div class="solution-card glass-panel interactive-card">
           <div class="solution-icon spark-target">
-            <div class="icon-automation"></div>
+            <img src="/icon-automation.svg" alt="Social Media Automation Icon" />
           </div>
           <h3 class="gold-gradient">Social Media Engagement</h3>
           <p>Our AI agents manage your social media, engaging with your audience and growing your online presence.</p>
@@ -143,7 +143,7 @@
         
         <div class="solution-card glass-panel interactive-card">
           <div class="solution-icon spark-target">
-            <div class="icon-nlp"></div>
+            <img src="/icon-nlp.svg" alt="AI Content Creation Icon" />
           </div>
           <h3 class="gold-gradient">AI Content Creation</h3>
           <p>Generate SEO-friendly articles, blog posts, and marketing copy that resonates with your target audience.</p>
@@ -156,7 +156,7 @@
         
         <div class="solution-card glass-panel interactive-card">
           <div class="solution-icon spark-target">
-            <div class="icon-analytics"></div>
+            <img src="/icon-analytics.svg" alt="Sentiment Analysis Icon" />
           </div>
           <h3 class="gold-gradient">Sentiment Analysis</h3>
           <p>Understand your customers better by analyzing feedback from social media, reviews, and support channels.</p>
@@ -169,7 +169,7 @@
         
         <div class="solution-card glass-panel interactive-card">
           <div class="solution-icon spark-target">
-            <div class="icon-neural"></div>
+            <img src="/icon-neural.svg" alt="Webpage Chat Agents Icon" />
           </div>
           <h3 class="gold-gradient">Webpage Chat Agents</h3>
           <p>Deploy intelligent chat agents on your website to schedule appointments, answer questions, and generate leads.</p>
@@ -281,7 +281,7 @@
 
   /* Glass Panel Effect */
   .glass-panel {
-    background: rgba(22, 28, 45, 0.6);
+    background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 215, 0, 0.1);
@@ -343,13 +343,13 @@
   .hero-tagline {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #ffd700;
+    color: #B8860B;
     margin-bottom: 1.5rem;
   }
 
   .hero-description {
     font-size: 1.1rem;
-    color: #c0c0c0;
+    color: #666666;
     margin-bottom: 2rem;
     line-height: 1.6;
   }
@@ -375,7 +375,7 @@
 
   .stat-label {
     font-size: 0.9rem;
-    color: #c0c0c0;
+    color: #666666;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -417,8 +417,8 @@
 
   .cta-secondary {
     background: transparent;
-    color: #ffd700;
-    border: 1px solid #ffd700;
+    color: #B8860B;
+    border: 1px solid #B8860B;
   }
 
   /* Section Styles */
@@ -431,7 +431,7 @@
 
   .section-subtitle {
     font-size: 1.2rem;
-    color: #c0c0c0;
+    color: #666666;
     text-align: center;
     max-width: 700px;
     margin: 0 auto 3rem auto;
@@ -470,7 +470,7 @@
     max-width: 600px;
     margin: 0 auto 2rem auto;
     font-size: 1.1rem;
-    color: #c0c0c0;
+    color: #666666;
     line-height: 1.6;
   }
 
@@ -487,9 +487,9 @@
   .demo-features li {
     padding: 0.6rem 1.2rem;
     position: relative;
-    color: #ffd700;
-    background: rgba(255, 215, 0, 0.05);
-    border: 1px solid rgba(255, 215, 0, 0.15);
+    color: #B8860B;
+    background: rgba(184, 134, 11, 0.05);
+    border: 1px solid rgba(184, 134, 11, 0.15);
     border-radius: 8px;
     font-weight: 600;
   }
@@ -522,9 +522,9 @@
   .neuron {
     width: 20px;
     height: 20px;
-    background: #ffd700;
+    background: #B8860B;
     border-radius: 50%;
-    box-shadow: 0 0 10px #ffd700;
+    box-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
     animation: pulse 2s infinite ease-in-out;
   }
   @keyframes pulse {
@@ -550,18 +550,15 @@
     height: 60px;
     margin: 0 auto 1.5rem auto;
     border-radius: 50%;
-    background: rgba(255, 215, 0, 0.1);
+    background: rgba(184, 134, 11, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .icon-neural, .icon-automation, .icon-analytics, .icon-nlp {
-    width: 30px;
-    height: 30px;
-    background-color: #ffd700;
+  .solution-icon img {
+    width: 35px;
+    height: 35px;
   }
-  /* This part needs actual icons, for now just placeholders */
-  .icon-neural { mask: url('data:image/svg+xml,...') no-repeat center; }
 
   .solution-card h3 {
     font-size: 1.3rem;
@@ -569,7 +566,7 @@
   }
 
   .solution-card p {
-    color: #c0c0c0;
+    color: #666666;
     line-height: 1.5;
     margin-bottom: 1.5rem;
   }
@@ -581,8 +578,8 @@
     gap: 0.5rem;
   }
   .feature-tag {
-    background: #333;
-    color: #c0c0c0;
+    background: #F5F5F5;
+    color: #666666;
     font-size: 0.8rem;
     padding: 0.3rem 0.6rem;
     border-radius: 0.3rem;
@@ -603,7 +600,7 @@
     margin-bottom: 1rem;
   }
   .tech-card p {
-    color: #c0c0c0;
+    color: #666666;
     line-height: 1.6;
   }
 
@@ -611,13 +608,13 @@
   /* About Us Section */
   .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 3rem;
     align-items: center;
   }
 
   .about-text p {
-    color: #c0c0c0;
+    color: #666666;
     line-height: 1.7;
     margin-bottom: 1.5rem;
   }
@@ -638,10 +635,10 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(255, 255, 255, 0.9);
     padding: 1rem;
     text-align: center;
-    color: #fff;
+    color: #333333;
     font-style: italic;
   }
 
@@ -662,7 +659,7 @@
     margin-bottom: 1rem;
   }
   .cta-text p {
-    color: #c0c0c0;
+    color: #666666;
     font-size: 1.1rem;
     line-height: 1.6;
   }

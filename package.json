@@ -25,5 +25,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"@n8n/chat": "^0.45.0"
 	}
 }
