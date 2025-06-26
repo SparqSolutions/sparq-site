@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   
   let currentDemo = 0;
-  let demoInterval: number;
+  let demoInterval: ReturnType<typeof setInterval>;
   
   const aiDemos = [
     {
@@ -45,8 +45,7 @@
       <div class="hero-content">
         <div class="hero-text">
           <div class="hero-title-visual">
-            <img src="/logoold.png" alt="SPARQ Logo" class="hero-title-logo-image" />
-            <img src="/sparqname.png" alt="SPARQ" class="hero-title-name-image" />
+            <img src="/logoFade.png" alt="SPARQ Logo" class="hero-logo-image" />
           </div>
           <p class="hero-tagline">Specialized Agentic Business Solutions</p>
           <p class="hero-description">
@@ -67,10 +66,10 @@
           </div>
           
           <div class="hero-actions">
-            <a href="/#demos" class="cta-primary glass-panel interactive-card">
+             <!-- <a href="/#demos" class="cta-primary glass-panel interactive-card">
               <span>Explore AI Demos</span>
-            </a>
-            <a href="/#contact" class="cta-secondary interactive-card">
+            </a>-->
+            <a href="/schedule" class="cta-secondary interactive-card">
               <span>Schedule Consultation</span>
             </a>
           </div>
@@ -224,15 +223,9 @@
           <p>
             Our team of experts has a deep understanding of both AI technology and the challenges that small businesses face. We work closely with you to understand your goals and develop a customized AI strategy that delivers real results.
           </p>
-          <a href="/#about" class="cta-secondary interactive-card">
+          <!--<a href="/#about" class="cta-secondary interactive-card">
             <span>Learn More About Our Mission</span>
-          </a>
-        </div>
-        <div class="about-visual glass-panel interactive-card">
-          <img src="/team-photo.jpg" alt="The SPARQ Team" class="about-image" />
-          <div class="about-image-overlay">
-            <p>"Empowering businesses with intelligent, accessible AI."</p>
-          </div>
+          </a>-->
         </div>
       </div>
     </div>
@@ -250,7 +243,10 @@
         </div>
         <div class="cta-action">
           <a href="/schedule" class="cta-primary glass-panel interactive-card">
-            <span>Schedule Free Consultation</span>
+            <span>Schedule Consultation</span>
+          </a>
+          <a href="/contact" class="cta-secondary interactive-card">
+            <span>Send a Message</span>
           </a>
         </div>
       </div>
@@ -298,7 +294,7 @@
 
   /* Hero Section */
   .hero-section {
-    padding: 6rem 2rem 4rem;
+    padding: 0 1rem 1rem;
     text-align: center;
   }
 
@@ -326,7 +322,14 @@
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-logo-image {
+    width: 400px;
+    height: auto;
+    mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 85%);
+    -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 85%);
   }
 
   .hero-title-logo-image {
@@ -613,10 +616,15 @@
     align-items: center;
   }
 
+  .about-text {
+    text-align: center;
+  }
+
   .about-text p {
     color: #666666;
     line-height: 1.7;
     margin-bottom: 1.5rem;
+    text-align: left;
   }
 
   .about-visual {
@@ -663,9 +671,16 @@
     font-size: 1.1rem;
     line-height: 1.6;
   }
-  .cta-action .cta-primary {
+  .cta-action {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .cta-action .cta-primary,
+  .cta-action .cta-secondary {
     padding: 1.2rem 2.5rem;
     font-size: 1.1rem;
+    text-align: center;
   }
 
 </style>

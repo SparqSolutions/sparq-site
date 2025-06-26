@@ -161,13 +161,24 @@
       const link = target.closest('a[href^="/#"]');
 
       if (link) {
-        event.preventDefault();
         const href = link.getAttribute('href');
         if (href) {
           const selector = href.substring(1); // e.g., /#home -> #home
-          const element = document.querySelector(selector);
+          const element = document.querySelector(selector) as HTMLElement;
           if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            event.preventDefault();
+            
+            const nav = document.querySelector('.main-nav') as HTMLElement;
+            const navHeight = nav ? nav.offsetHeight : 0;
+            const extraPadding = 20; // extra space below the nav bar
+            
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navHeight - extraPadding;
+      
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
           }
         }
       }
@@ -333,7 +344,7 @@
         <a href="/#about" class="nav-link">About</a>
         <a href="/#contact" class="nav-link">Contact</a>
       </div>
-      <a href="/#contact" class="nav-cta">Let's Go!</a>
+      <a href="/contact" style="text-decoration: none;" class="nav-cta">Contact Us</a>
     </div>
   </nav>
   
@@ -434,6 +445,18 @@
     height: 100%;
     pointer-events: none;
     z-index: 0;
+  }
+  
+  .app-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 20%, rgba(255,255,255,0.85) 80%, rgba(255,255,255,0) 100%);
   }
   
   .occlusion-vignette {
