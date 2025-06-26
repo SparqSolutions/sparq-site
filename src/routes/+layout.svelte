@@ -487,6 +487,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 2px solid rgba(184, 134, 11, 0.1);
   }
   
   .nav-logo {
