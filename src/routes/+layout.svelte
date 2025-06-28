@@ -139,7 +139,7 @@
 
       this.alpha = Math.min(1.0, this.lifetime / 500.0);
 
-      ctx.fillStyle = `rgba(255, 215, 100, ${0.8 * this.alpha})`;
+      ctx.fillStyle = `rgba(255, 215, 215, ${0.6 * this.alpha})`;
       ctx.shadowColor = `rgba(255, 215, 0, ${this.alpha})`;
       ctx.shadowBlur = 5;
       ctx.beginPath();
@@ -204,7 +204,7 @@
 
     let width: number, height: number, dpr: number;
     let particles: Particle[] = [];
-    const numParticles = 30;
+    const numParticles = 40;
     const particleSpeed = 0.5;
 
     let circuitPaths: Path[] = [];
@@ -217,7 +217,7 @@
     function createCircuitLayout() {
       circuitPaths = [];
       nodes.clear();
-      const gridSize = 40;
+      const gridSize = 60;
       const cols = Math.floor(width / gridSize);
       const rows = Math.floor(height / gridSize);
 
