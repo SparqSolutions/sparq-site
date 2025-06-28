@@ -8,17 +8,17 @@
   const aiDemos = [
     {
       title: "Social Media Outreach",
-      description: "AI agents that automate social media engagement, schedule posts, and analyze audience sentiment.",
+      description: "Automated solutions for social media engagement, posting, and sentiment analysis.",
       features: ["Automated Posting", "Sentiment Analysis", "Engagement Tracking"]
     },
     {
-      title: "AI Content Generation",
+      title: "Automated Content Generation",
       description: "Generate high-quality blog posts, articles, and marketing copy tailored to your brand's voice.",
       features: ["SEO Optimization", "Multiple Formats", "Brand Voice Matching"]
     },
     {
-      title: "Webpage Chat Agents",
-      description: "Intelligent chat agents to handle customer inquiries, schedule appointments, and capture leads 24/7.",
+      title: "Webpage Engagement Automation",
+      description: "Reactive Automation Solutions to handle customer inquiries, schedule appointments, and capture leads 24/7.",
       features: ["Lead Capture", "Appointment Scheduling", "Instant Responses"]
     }
   ];
@@ -34,8 +34,8 @@
 </script>
 
 <svelte:head>
-  <title>SPARQ - AI for Small & Medium Businesses</title>
-  <meta name="description" content="AI-powered solutions for small and medium businesses. We build AI agents for social media, content creation, and customer engagement." />
+  <title>SPARQ - Custom Autonomous Solutions</title>
+  <meta name="description" content="Automated solutions for your business. We specialize in automating social media interactions, content creation, and customer engagement." />
 </svelte:head>
 
 <div class="homepage">
@@ -47,13 +47,13 @@
           <div class="hero-title-visual">
             <img src="/logoFade.png" alt="SPARQ Logo" class="hero-logo-image" />
           </div>
-          <p class="hero-tagline">Specialized Agentic Business Solutions</p>
+          <p class="hero-tagline">Specialized Autonomous Business Solutions</p>
           <p class="hero-description">
-            We build and deploy AI agents to handle your social media, generate content, and engage with your customers. 
+            We build and deploy automated solutions to handle your social media, generate content, and engage with your customers. 
             Our solutions are designed to grow your business and streamline your operations.
           </p>
           
-          <div class="hero-stats">
+          <!--<div class="hero-stats">
             <div class="stat-item spark-target">
               <span class="stat-number gold-gradient">3</span>
               <span class="stat-label">Active Deployments</span>
@@ -62,8 +62,8 @@
               <span class="stat-number gold-gradient">24/7</span>
               <span class="stat-label">Agent Availability</span>
             </div>
-            
-          </div>
+
+          </div>-->
           
           <div class="hero-actions">
              <!-- <a href="/#demos" class="cta-primary glass-panel interactive-card">
@@ -81,9 +81,9 @@
   <!-- AI Demos Section -->
   <section class="demos-section" id="demos">
     <div class="section-container">
-      <h2 class="section-title gold-gradient">Infinite possibilities with Agentic Deployment</h2>
+      <h2 class="section-title gold-gradient">Infinite possibilities with Autonomous Deployments</h2>
       <p class="section-subtitle">
-        See how our AI agents can work for your business. Automation in key areas help you grow.
+        See how autonomous solutions can work for your business. Automation in key areas help you grow.
       </p>
       
       <div class="rotating-demo-window glass-panel">
@@ -123,7 +123,7 @@
     <div class="section-container">
       <h2 class="section-title gold-gradient">Solutions for Your Business</h2>
       <p class="section-subtitle">
-        We offer a range of AI services to meet the needs of small and medium-sized businesses.
+        We offer a range of autonomous solutions to meet the needs of small and medium-sized businesses.
       </p>
       
       <div class="solutions-grid">
@@ -132,7 +132,7 @@
             <img src="/icon-automation.svg" alt="Social Media Automation Icon" />
           </div>
           <h3 class="gold-gradient">Social Media Engagement</h3>
-          <p>Our AI agents manage your social media, engaging with your audience and growing your online presence.</p>
+          <p>Our automated deployments manage your social media, engaging with your audience and growing your online presence.</p>
           <div class="solution-features">
             <span class="feature-tag">Outreach</span>
             <span class="feature-tag">Engagement</span>
@@ -144,7 +144,7 @@
           <div class="solution-icon spark-target">
             <img src="/icon-nlp.svg" alt="AI Content Creation Icon" />
           </div>
-          <h3 class="gold-gradient">AI Content Creation</h3>
+          <h3 class="gold-gradient">Autonomous Content Creation</h3>
           <p>Generate SEO-friendly articles, blog posts, and marketing copy that resonates with your target audience.</p>
           <div class="solution-features">
             <span class="feature-tag">Content Strategy</span>
@@ -170,8 +170,8 @@
           <div class="solution-icon spark-target">
             <img src="/icon-neural.svg" alt="Webpage Chat Agents Icon" />
           </div>
-          <h3 class="gold-gradient">Webpage Chat Agents</h3>
-          <p>Deploy intelligent chat agents on your website to schedule appointments, answer questions, and generate leads.</p>
+          <h3 class="gold-gradient">Webpage Engagement Automation</h3>
+          <p>Deploy intelligent automation on your website to schedule appointments, answer questions, and generate leads.</p>
           <div class="solution-features">
             <span class="feature-tag">Scheduling</span>
             <span class="feature-tag">Lead Generation</span>
@@ -189,12 +189,12 @@
       <div class="tech-grid">
         <div class="tech-column">
           <div class="tech-card glass-panel interactive-card">
-            <h3 class="gold-gradient">Built for Small Business</h3>
-            <p>We focus on affordable, high-impact AI solutions that are tailored to the unique needs of small and medium-sized businesses.</p>
+            <h3 class="gold-gradient">Built for Business</h3>
+            <p>We focus on affordable, high-impact autonomous solutions that are tailored to the unique needs of small and medium-sized businesses.</p>
           </div>
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Fast Deployment</h3>
-            <p>Our pre-built AI models and streamlined processes mean we can get your AI agents up and running in record time.</p>
+            <p>Our automated, streamlined processes mean we can get autonomous solutions up and running in record time.</p>
           </div>
         </div>
         <div class="tech-column">
@@ -204,7 +204,7 @@
           </div>
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Dedicated Support</h3>
-            <p>We provide ongoing support and maintenance to ensure your AI solutions continue to deliver value.</p>
+            <p>We provide ongoing support and maintenance to ensure autonomous solutions continue to deliver value.</p>
           </div>
         </div>
       </div>
@@ -216,12 +216,12 @@
     <div class="section-container">
       <div class="about-content">
         <div class="about-text">
-          <h2 class="section-title gold-gradient">Your Partner in AI Growth</h2>
-          <p>
-            SPARQ was founded with a simple mission: to make the power of artificial intelligence accessible to small and medium-sized businesses. We believe that AI can be a powerful tool for growth, and we're dedicated to helping our clients succeed.
+          <h2 class="section-title gold-gradient">Your Partner in Automated Growth</h2>
+          <p style="font-size: 1.2rem;">
+            SPARQ was founded with a simple mission: to make the power of automation accessible to any size business. We believe that autonomous solutions are an incredibly powerful tool for growth, and we're dedicated to helping our clients succeed.
           </p>
-          <p>
-            Our team of experts has a deep understanding of both AI technology and the challenges that small businesses face. We work closely with you to understand your goals and develop a customized AI strategy that delivers real results.
+          <p style="font-size: 1.2rem;">
+            Our team of experts has a deep understanding of automation technology and decades of business experience. We work closely with you to understand your goals and develop a customized autonomous strategies that delivers real results.
           </p>
           <!--<a href="/#about" class="cta-secondary interactive-card">
             <span>Learn More About Our Mission</span>
@@ -238,7 +238,7 @@
         <div class="cta-text">
           <h2 class="section-title gold-gradient">Ready to Grow Your Business?</h2>
           <p>
-            Let's talk about how our AI agents can help you achieve your goals. Schedule a free consultation with one of our AI specialists today.
+            Let's talk about how our solutions will help you achieve your goals. Schedule a free consultation with our specialists today.
           </p>
         </div>
         <div class="cta-action">
@@ -277,7 +277,7 @@
 
   /* Glass Panel Effect */
   .glass-panel {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(20, 20, 20, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 215, 0, 0.1);
@@ -302,7 +302,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 4rem;
   }
 
   .hero-content {
@@ -314,22 +314,22 @@
   }
 
   .hero-text {
-    max-width: 600px;
+    max-width: 1000px;
   }
 
   .hero-title-visual {
     display: flex;
+    height: 30rem;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 0.5rem;
+    gap: 4rem;
+    background: radial-gradient(ellipse 65% 80%, rgba(255, 255, 255, 0.15) 20%, rgba(212, 175, 55, 0) 70%);
   }
 
   .hero-logo-image {
-    width: 400px;
+    width: 600px;
     height: auto;
-    mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 85%);
-    -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 85%);
+    padding: 2rem;
   }
 
   .hero-title-logo-image {
@@ -344,15 +344,15 @@
   }
 
   .hero-tagline {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 600;
     color: #B8860B;
     margin-bottom: 1.5rem;
   }
 
   .hero-description {
-    font-size: 1.1rem;
-    color: #666666;
+    font-size: 1.3rem;
+    color: #CCCCCC;
     margin-bottom: 2rem;
     line-height: 1.6;
   }
@@ -378,7 +378,7 @@
 
   .stat-label {
     font-size: 0.9rem;
-    color: #666666;
+    color: #CCCCCC;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -415,7 +415,7 @@
 
   .cta-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 10px 80px rgba(212, 175, 55, 0.4);
   }
 
   .cta-secondary {
@@ -426,15 +426,15 @@
 
   /* Section Styles */
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     text-align: center;
     margin-bottom: 1rem;
   }
 
   .section-subtitle {
-    font-size: 1.2rem;
-    color: #666666;
+    font-size: 1.3rem;
+    color: #CCCCCC;
     text-align: center;
     max-width: 700px;
     margin: 0 auto 3rem auto;
@@ -473,7 +473,7 @@
     max-width: 600px;
     margin: 0 auto 2rem auto;
     font-size: 1.1rem;
-    color: #666666;
+    color: #CCCCCC;
     line-height: 1.6;
   }
 
@@ -569,7 +569,7 @@
   }
 
   .solution-card p {
-    color: #666666;
+    color: #CCCCCC;
     line-height: 1.5;
     margin-bottom: 1.5rem;
   }
@@ -581,8 +581,8 @@
     gap: 0.5rem;
   }
   .feature-tag {
-    background: #F5F5F5;
-    color: #666666;
+    background: #333333;
+    color: #DDDDDD;
     font-size: 0.8rem;
     padding: 0.3rem 0.6rem;
     border-radius: 0.3rem;
@@ -603,7 +603,7 @@
     margin-bottom: 1rem;
   }
   .tech-card p {
-    color: #666666;
+    color: #CCCCCC;
     line-height: 1.6;
   }
 
@@ -621,7 +621,7 @@
   }
 
   .about-text p {
-    color: #666666;
+    color: #CCCCCC;
     line-height: 1.7;
     margin-bottom: 1.5rem;
     text-align: left;
@@ -643,10 +643,10 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(13, 13, 13, 0.9);
     padding: 1rem;
     text-align: center;
-    color: #333333;
+    color: #E0E0E0;
     font-style: italic;
   }
 
@@ -667,7 +667,7 @@
     margin-bottom: 1rem;
   }
   .cta-text p {
-    color: #666666;
+    color: #CCCCCC;
     font-size: 1.1rem;
     line-height: 1.6;
   }

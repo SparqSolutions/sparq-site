@@ -271,7 +271,7 @@
       const deltaTime = time - lastTime;
       lastTime = time;
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.fillStyle = 'rgba(13, 13, 13, 0.2)';
       ctx.fillRect(0, 0, width, height);
 
       drawStaticBoard();
@@ -338,7 +338,7 @@
     <div class="nav-container">
       <div class="nav-links">
         <a href="/#home" class="nav-link active">Home</a>
-        <a href="/#demos" class="nav-link">AI Demos</a>
+        <a href="/#demos" class="nav-link">Autonomous Demos</a>
         <a href="/#solutions" class="nav-link">Solutions</a>
 
         <a href="/#about" class="nav-link">About</a>
@@ -425,8 +425,8 @@
   
   :global(body) {
     font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #FFFFFF;
-    color: #333333;
+    background: #0D0D0D;
+    color: #E0E0E0;
     overflow-x: hidden;
     line-height: 1.6;
   }
@@ -456,7 +456,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 1;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 20%, rgba(255,255,255,0.85) 80%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(to right, rgba(13,13,13,0) 0%, rgba(240, 184, 30, 0.1) 20%, rgba(240, 184, 30, 0.1) 80%, rgba(13,13,13,0) 100%);
   }
   
   .occlusion-vignette {
@@ -476,7 +476,7 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(13, 13, 13, 0.7);
     backdrop-filter: blur(20px);
   }
   
@@ -518,7 +518,7 @@
   }
   
   .nav-link {
-    color: #666666;
+    color: #CCCCCC;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -564,7 +564,7 @@
   
   /* Footer */
   .main-footer {
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(13, 13, 13, 0.98);
     border-top: 1px solid rgba(184, 134, 11, 0.15);
     padding: 3rem 0 1.5rem;
     margin-top: 4rem;
@@ -596,7 +596,7 @@
   }
   
   .footer-section a {
-    color: #666666;
+    color: #CCCCCC;
     text-decoration: none;
     transition: color 0.3s ease;
   }
@@ -614,7 +614,7 @@
   }
   
   :global(.glass-panel) {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(20, 20, 20, 0.75);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(184, 134, 11, 0.1);
     border-radius: 12px;
@@ -745,8 +745,8 @@
   }
 
   .chat-nub-button {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     padding: 0;
     display: flex;
@@ -757,10 +757,30 @@
     transition: all 0.3s ease;
     flex-shrink: 0;
     background: transparent;
+    position: relative;
+  }
+  
+  .chat-nub-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #B8860B, #DAA520);
+    filter: blur(20px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
   }
   
   .chat-nub-button:hover {
     transform: scale(1.1);
+  }
+
+  .chat-nub-button:hover::before {
+    opacity: 0.7;
   }
 
   .chat-nub-button img {
@@ -800,7 +820,7 @@
     overflow: hidden;
     transform-origin: bottom right;
     animation: open-chat 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(25, 25, 25, 0.95);
   }
 
   @keyframes open-chat {
@@ -813,7 +833,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(13, 13, 13, 0.9);
     border-bottom: 1px solid rgba(184, 134, 11, 0.25);
     flex-shrink: 0;
   }
@@ -839,8 +859,8 @@
   .chat-body {
     flex-grow: 1;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333333;
+    background: rgba(18, 18, 18, 0.9);
+    color: #E0E0E0;
     overflow-y: auto;
   }
   
@@ -874,22 +894,22 @@
     display: flex;
     padding: 0.75rem;
     border-top: 1px solid rgba(184, 134, 11, 0.25);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(13, 13, 13, 0.9);
     flex-shrink: 0;
   }
   
   .chat-footer input {
     flex-grow: 1;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(30, 30, 30, 0.95);
     border: 1px solid rgba(184, 134, 11, 0.25);
     border-radius: 6px;
     padding: 0.5rem;
-    color: #333333;
+    color: #E0E0E0;
     font-family: 'Orbitron', sans-serif;
   }
 
   .chat-footer input::placeholder {
-    color: #888;
+    color: #777;
   }
   
   .chat-footer button {
@@ -924,13 +944,13 @@
   }
 
   .chat-message.bot {
-    background: rgba(245, 245, 245, 0.9);
+    background: rgba(40, 40, 40, 0.9);
     border: 1px solid rgba(184, 134, 11, 0.1);
     margin-right: auto;
   }
 
   .chat-message span {
-    color: #333333;
+    color: #E0E0E0;
     font-size: 0.9rem;
     line-height: 1.4;
   }
