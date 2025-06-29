@@ -371,7 +371,10 @@
     font-size: 1.3rem;
     color: #CCCCCC;
     margin-bottom: 2rem;
-    
+    background: linear-gradient(90deg, #bab8b1 0%, #d1cfc7 25%, #ffffff 50%, #d1cfc7 75%, #bab8b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     max-width: 700px;
     margin: 0 auto 3rem auto;
     line-height: 1.6;
@@ -568,7 +571,7 @@
   /* Solutions Section */
   .solutions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1.5rem;
   }
 

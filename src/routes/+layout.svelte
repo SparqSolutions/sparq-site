@@ -7,7 +7,7 @@
 
   // Chat functionality variables
   let chatInput = '';
-  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/74535101-9017-471c-8a64-af87b7665862';
+  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/4edf10d2-00e8-452f-8392-fdad8d0c0b27';
   let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
   let isSending = false;
   let sessionId = '';
@@ -15,54 +15,82 @@
   // Chat functions
   async function sendMessage() {
     if (!chatInput.trim()) return;
+    console.log('[Chat] sendMessage triggered.');
+
     const message = chatInput;
     chatMessages = [...chatMessages, { from: 'user', text: message }];
+    console.log('[Chat] User message added to UI:', message);
     chatInput = '';
     isSending = true;
     
     try {
       if (!sessionId) {
         sessionId = crypto.randomUUID();
+        console.log('[Chat] New session created with ID:', sessionId);
       }
+      console.log(`[Chat] Preparing to send message for session: ${sessionId}`);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => {
+        console.warn('[Chat] Request timed out after 30 seconds.');
+        controller.abort();
+      }, 30000);
+
+      //const requestBody = { message };
+      const headers = { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'sessionId': sessionId
+      };
+
+      console.log('[Chat] Sending POST request to:', n8nUrl);
+      console.log('[Chat] Headers:', headers);
+      console.log('[Chat] Body:', JSON.stringify(message, null, 2));
       
       const res = await fetch(n8nUrl, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'sessionId': sessionId
-        },
-        body: JSON.stringify({ message }),
+        headers: headers,
+        body: JSON.stringify({message: message}),
         signal: controller.signal
       });
       
       clearTimeout(timeoutId);
       
+      console.log(`[Chat] Received response. Status: ${res.status}, StatusText: ${res.statusText}`);
+
       if (!res.ok) {
+        const errorBody = await res.text();
+        console.error(`[Chat] HTTP Error Response! Status: ${res.status}. Body: ${errorBody}`);
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       
       const data = await res.json();
+      console.log('[Chat] Successfully parsed JSON response:', data);
       
       const botReply = data.reply || data.response || data.message || data.text || data.content || 'No response received';
+      console.log('[Chat] Extracted bot reply:', botReply);
+
       chatMessages = [...chatMessages, { from: 'bot', text: botReply }];
       
     } catch (e: any) {
+      console.error('[Chat] Error in sendMessage:', e);
+
       let errorMessage = 'Error contacting server.';
       if (e.name === 'AbortError') {
         errorMessage = 'Request timed out. Please try again.';
+        console.error('[Chat] Error type: AbortError (Timeout)');
       } else if (e.message?.includes('Failed to fetch')) {
         errorMessage = 'Network error. Check your connection.';
+        console.error('[Chat] Error type: Network error (Failed to fetch)');
       } else if (e.message?.includes('HTTP error')) {
         errorMessage = `Server error: ${e.message}`;
+        console.error(`[Chat] Error type: HTTP error (${e.message})`);
       }
       
       chatMessages = [...chatMessages, { from: 'bot', text: errorMessage }];
     } finally {
       isSending = false;
+      console.log('[Chat] sendMessage process finished.');
     }
   }
 
