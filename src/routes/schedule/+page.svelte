@@ -35,7 +35,7 @@
   .section-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     text-align: center;
   }
 
@@ -52,12 +52,17 @@
   }
 
   .scheduling-widget-container {
-    /* min-height is no longer needed here */
+    position: relative;
+    width: 100%;
+    overflow: hidden;
   }
 
   :global(.calendly-inline-widget) {
-    min-width: 320px;
-    height:1000px;
+    position: relative;
+    width: 100% !important;
+    min-width: 280px;
+    height: 100vh !important;
+    max-height: 1000px;
   }
 
   .back-link-container {
@@ -75,5 +80,36 @@
     font-weight: 600;
     border-radius: 0.5rem;
     text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .schedule-page {
+      padding: 2rem 0;
+    }
+
+    .section-container {
+      padding: 0 1rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    :global(.calendly-inline-widget) {
+      margin: 0 -1rem;
+      width: calc(100% + 2rem) !important;
+      min-height: 140vh;
+    }
+
+    .back-link {
+      width: 100%;
+      text-align: center;
+    }
   }
 </style> 
