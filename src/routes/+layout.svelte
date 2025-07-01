@@ -402,7 +402,9 @@
   <!-- Chat Nub -->
   <div class="chat-nub-container">
     <button class="chat-nub-button" on:click={toggleChat}>
-      <img src="/logoold.png" alt="Chat Agent" />
+      <div class="chat-nub-gradient">
+        <img src="/logoold.png" alt="Chat Agent" />
+      </div>
     </button>
     {#if isChatOpen}
       <div class="chat-window glass-panel">
@@ -814,8 +816,8 @@
     border: none;
     transition: all 0.3s ease;
     flex-shrink: 0;
-    background: transparent;
     position: relative;
+    background: transparent;
   }
   
   .chat-nub-button::before {
@@ -832,7 +834,7 @@
     transition: opacity 0.3s ease;
     z-index: -1;
   }
-  
+
   .chat-nub-button:hover {
     transform: scale(1.1);
   }
@@ -840,11 +842,29 @@
   .chat-nub-button:hover::before {
     opacity: 0.7;
   }
-
-  .chat-nub-button img {
+  
+  .chat-nub-gradient {
     width: 90%;
     height: 90%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(0, 0, 0) 15%, rgba(0, 0, 0, 0.85) 30%, rgba(255, 255, 255, 0)50%);
+    animation: pulse-transform 2.5s infinite ease-in-out;
+  }
+  
+  .chat-nub-button img {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+  }
+  
+  @keyframes pulse-transform {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
   }
   
   .chat-prompt {
