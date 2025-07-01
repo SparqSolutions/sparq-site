@@ -91,8 +91,9 @@
 
   .form-container iframe {
     width: 100% !important;
-    height: 100vh !important;
-    max-height: 1200px;
+    height: 80vh !important;
+    min-height: 700px !important;
+    max-height: none !important;
     border: none;
   }
 
@@ -145,8 +146,9 @@
     }
 
     .form-container iframe {
-      height: 140vh !important;
-      min-height: 1000px;
+      height: 200vh !important;
+      min-height: 1800px !important;
+      max-height: none !important;
     }
 
     .back-link-container {
