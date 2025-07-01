@@ -132,7 +132,7 @@
             <img src="/icon-automation.svg" alt="Social Media Automation Icon" />
           </div>
           <h3 class="gold-gradient">Social Media Engagement</h3>
-          <p>Our automated deployments manage your social media, engaging with your audience and growing your online presence.</p>
+          <p class="solution-description">Our automated deployments manage your social media, engaging with your audience and growing your online presence.</p>
           <div class="solution-features">
             <span class="feature-tag">Outreach</span>
             <span class="feature-tag">Engagement</span>
@@ -145,7 +145,7 @@
             <img src="/icon-nlp.svg" alt="AI Content Creation Icon" />
           </div>
           <h3 class="gold-gradient">Autonomous Content Creation</h3>
-          <p>Generate SEO-friendly articles, blog posts, and marketing copy that resonates with your target audience.</p>
+          <p class="solution-description">Generate SEO-friendly articles, blog posts, and marketing copy that resonates with your target audience.</p>
           <div class="solution-features">
             <span class="feature-tag">Content Strategy</span>
             <span class="feature-tag">SEO</span>
@@ -158,7 +158,7 @@
             <img src="/icon-analytics.svg" alt="Sentiment Analysis Icon" />
           </div>
           <h3 class="gold-gradient">Sentiment Analysis</h3>
-          <p>Understand your customers better by analyzing feedback from social media, reviews, and support channels.</p>
+          <p class="solution-description">Understand your customers better by analyzing feedback from social media, reviews, and support channels.</p>
           <div class="solution-features">
             <span class="feature-tag">Customer Feedback</span>
             <span class="feature-tag">Brand Monitoring</span>
@@ -171,7 +171,7 @@
             <img src="/icon-neural.svg" alt="Webpage Chat Agents Icon" />
           </div>
           <h3 class="gold-gradient">Webpage Engagement Automation</h3>
-          <p>Deploy intelligent automation on your website to schedule appointments, answer questions, and generate leads.</p>
+          <p class="solution-description">Deploy intelligent automation on your website to schedule appointments, answer questions, and generate leads.</p>
           <div class="solution-features">
             <span class="feature-tag">Scheduling</span>
             <span class="feature-tag">Lead Generation</span>
@@ -190,21 +190,21 @@
         <div class="tech-column">
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Built for Business</h3>
-            <p>We focus on affordable, high-impact autonomous solutions that are tailored to the unique needs of small and medium-sized businesses.</p>
+            <p class="solution-description">We focus on affordable, high-impact autonomous solutions that are tailored to the unique needs of small and medium-sized businesses.</p>
           </div>
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Fast Deployment</h3>
-            <p>Our automated, streamlined processes mean we can get autonomous solutions up and running in record time.</p>
+            <p class="solution-description">Our automated, streamlined processes mean we can get autonomous solutions up and running in record time.</p>
           </div>
         </div>
         <div class="tech-column">
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Scalable & Flexible</h3>
-            <p>Start with one solution and add more as your business grows. Our platform is designed to scale with you.</p>
+            <p class="solution-description">Start with one solution and add more as your business grows. Our platform is designed to scale with you.</p>
           </div>
           <div class="tech-card glass-panel interactive-card">
             <h3 class="gold-gradient">Dedicated Support</h3>
-            <p>We provide ongoing support and maintenance to ensure autonomous solutions continue to deliver value.</p>
+            <p class="solution-description">We provide ongoing support and maintenance to ensure autonomous solutions continue to deliver value.</p>
           </div>
         </div>
       </div>
@@ -217,10 +217,10 @@
       <div class="about-content">
         <div class="about-text">
           <h2 class="section-title gold-gradient">Your Partner in Automated Growth</h2>
-          <p style="font-size: 1.2rem;">
+          <p style="font-size: 1.2rem;" class="solution-description">
             SPARQ was founded with a simple mission: to make the power of automation accessible to any size business. We believe that autonomous solutions are an incredibly powerful tool for growth, and we're dedicated to helping our clients succeed.
           </p>
-          <p style="font-size: 1.2rem;">
+          <p style="font-size: 1.2rem;" class="solution-description">
             Our team of experts has a deep understanding of automation technology and decades of business experience. We work closely with you to understand your goals and develop a customized autonomous strategies that delivers real results.
           </p>
           <!--<a href="/#about" class="cta-secondary interactive-card">
@@ -237,7 +237,7 @@
       <div class="cta-content glass-panel">
         <div class="cta-text">
           <h2 class="section-title gold-gradient">Ready to Grow Your Business?</h2>
-          <p>
+          <p class="solution-description">
             Let's talk about how our solutions will help you achieve your goals. Schedule a free consultation with our specialists today.
           </p>
         </div>
@@ -335,7 +335,7 @@
     right: 0;
     bottom: 0;
     z-index: -1;
-    background: radial-gradient(ellipse 65% 80%, rgba(255, 255, 255, 0.18) 10%, rgba(212, 175, 55, 0) 60%);
+    background: radial-gradient(ellipse 65% 80%, rgba(255, 255, 255, 0.20) 20%, rgba(212, 175, 55, 0) 65%);
     animation: pulse-transform 2.5s infinite ease-in-out;
   }
 
@@ -343,6 +343,25 @@
     width: 600px;
     height: auto;
     padding: 2rem;
+    /* Apply golden gradient effect to the logo */
+    filter: 
+      saturate(2) 
+      hue-rotate(25deg) 
+      brightness(1.1) 
+      contrast(1.1)
+      drop-shadow(0 0 30px rgba(212, 175, 55, 0.6))
+      drop-shadow(0 0 60px rgba(212, 175, 55, 0.3));
+    transition: filter 0.3s ease;
+  }
+
+  .hero-logo-image:hover {
+    filter: 
+      saturate(2.2) 
+      hue-rotate(25deg) 
+      brightness(1.3) 
+      contrast(1.2)
+      drop-shadow(0 0 40px rgba(212, 175, 55, 0.8))
+      drop-shadow(0 0 80px rgba(212, 175, 55, 0.4));
   }
 
   .hero-title-logo-image {
@@ -459,6 +478,10 @@
     font-size: 1.3rem;
     color: #CCCCCC;
     text-align: center;
+    background: linear-gradient(90deg, #bab8b1 0%, #d1cfc7 25%, #ffffff 50%, #d1cfc7 75%, #bab8b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     max-width: 700px;
     margin: 0 auto 3rem auto;
   }
@@ -472,12 +495,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
   }
 
   .demo-card {
     text-align: center;
     position: absolute;
-    z-index: 2;
+    width: 100%;
+    max-width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 1rem;
   }
   
   .demo-header {
@@ -495,9 +524,27 @@
   .demo-description {
     max-width: 600px;
     margin: 0 auto 2rem auto;
+    background: linear-gradient(90deg, #bab8b1 0%, #d1cfc7 25%, #ffffff 50%, #d1cfc7 75%, #bab8b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1.1rem;
-    color: #CCCCCC;
     line-height: 1.6;
+  }
+
+  .solution-description {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    background: linear-gradient(90deg, #bab8b1 0%, #d1cfc7 25%, #ffffff 50%, #d1cfc7 75%, #bab8b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .demo-features {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .demo-features ul {
@@ -571,13 +618,16 @@
   /* Solutions Section */
   .solutions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    padding: 0 1rem;
   }
 
   .solution-card {
     padding: 2rem;
     text-align: center;
+    width: 100%;
+    min-width: 0; /* Prevents flex item overflow */
   }
   .solution-icon {
     width: 60px;
@@ -625,19 +675,27 @@
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
+
+  .tech-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
   .tech-card {
     padding: 2rem;
     margin-bottom: 2rem;
   }
+
   .tech-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
+
   .tech-card p {
     color: #CCCCCC;
     line-height: 1.6;
   }
-
 
   /* About Us Section */
   .about-content {
@@ -649,6 +707,8 @@
 
   .about-text {
     text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
   .about-text p {
@@ -739,6 +799,168 @@
     .hero-actions {
       flex-direction: column;
       align-items: center;
+    }
+
+    .solutions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0;
+    }
+
+    .solution-card {
+      width: calc(100% - 2rem);
+      margin: 0 1rem 1rem 1rem;
+    }
+
+    .solution-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .solutions-section {
+      padding: 0;
+    }
+
+    .section-container {
+      padding: 0;
+    }
+
+    .solution-features {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0;
+    }
+
+    .feature-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .solution-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .solution-card p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .solution-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    .solution-icon img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .rotating-demo-window {
+      padding: 1.5rem;
+      min-height: 400px;
+    }
+
+    .demo-card {
+      padding: 0 0.5rem;
+    }
+
+    .demo-header {
+      margin-bottom: 1rem;
+    }
+
+    .demo-title {
+      font-size: 1.5rem;
+      word-wrap: break-word;
+    }
+
+    .demo-description {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .demo-features ul {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .demo-features li {
+      width: auto;
+      max-width: 90%;
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+    }
+
+    .demo-visual-background {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.05;
+    }
+
+    .neural-network-viz {
+      transform: scale(0.8);
+    }
+
+    .tech-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0;
+    }
+
+    .tech-column {
+      gap: 1rem;
+    }
+
+    .tech-card {
+      width: calc(100% - 2rem);
+      margin: 0 1rem 1rem 1rem;
+      padding: 1.5rem;
+    }
+
+    .tech-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .tech-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tech-card p {
+      font-size: 0.9rem;
+    }
+
+    .tech-section {
+      padding: 0;
+    }
+
+    .about-section {
+      padding: 0 1rem;
+    }
+
+    .about-content {
+      gap: 2rem;
+    }
+
+    .about-text {
+      width: 100%;
+      padding: 0;
+    }
+
+    .about-text p {
+      font-size: 1rem !important;
+      padding: 0;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      width: 100%;
+    }
+
+    .section-container {
+      padding: 0;
     }
   }
 </style>

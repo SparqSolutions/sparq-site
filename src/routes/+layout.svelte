@@ -396,14 +396,6 @@
           <li><a href="#integration">System Integration</a></li>
         </ul>
       </div>
-      <div class="footer-section">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="#docs">Documentation</a></li>
-          <li><a href="#support">Support</a></li>
-          <li><a href="#blog">Blog</a></li>
-        </ul>
-      </div>
     </div>
   </footer>
 
@@ -464,16 +456,19 @@
     position: relative;
     min-height: 100vh;
     background: transparent;
+    width: 100%;
+    overflow-x: hidden;
   }
   
   .pcb-background {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: 0;
+    overflow: hidden;
   }
   
   .app-container::before {
@@ -496,6 +491,9 @@
     width: 100%;
     height: 100%;
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   
   /* Navigation */
@@ -589,6 +587,8 @@
     position: relative;
     z-index: 10;
     padding-top: 80px;
+    width: 100%;
+    overflow-x: hidden;
   }
   
   /* Footer */
@@ -710,7 +710,9 @@
   /* Responsive design */
   @media (max-width: 768px) {
     .nav-container {
-      padding: 1rem;
+      padding: 0.75rem;
+      width: 100%;
+      overflow-x: hidden;
     }
     
     .nav-links {
@@ -725,6 +727,33 @@
     .footer-container {
       grid-template-columns: 1fr;
       text-align: center;
+      padding: 0 1rem;
+    }
+
+    .chat-nub-container {
+      bottom: 1rem;
+      right: 1rem;
+    }
+
+    .chat-nub-button {
+      width: 80px;
+      height: 80px;
+    }
+
+    .chat-window {
+      width: calc(100vw - 2rem);
+      right: 0;
+      bottom: calc(100% + 0.5rem);
+    }
+
+    .pcb-background {
+      width: 100%;
+      height: 100%;
+    }
+
+    #pcb-canvas {
+      transform: scale(0.8);
+      transform-origin: center center;
     }
   }
 
