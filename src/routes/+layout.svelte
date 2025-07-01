@@ -7,7 +7,7 @@
 
   // Chat functionality variables
   let chatInput = '';
-  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook-test/4edf10d2-00e8-452f-8392-fdad8d0c0b27';
+  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook/573d6644-8a72-445a-9011-209ebf37aaf5';
   let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
   let isSending = false;
   let sessionId = '';
@@ -67,7 +67,7 @@
       const data = await res.json();
       console.log('[Chat] Successfully parsed JSON response:', data);
       
-      const botReply = data.reply || data.response || data.message || data.text || data.content || 'No response received';
+      const botReply = data.reply || data.output || data.response || data.message || data.text || data.content || 'No response received';
       console.log('[Chat] Extracted bot reply:', botReply);
 
       chatMessages = [...chatMessages, { from: 'bot', text: botReply }];
