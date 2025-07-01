@@ -28,6 +28,7 @@
 		]
 	},
 	"dependencies": {
-		"@n8n/chat": "^0.45.0"
+		"@n8n/chat": "^0.45.0",
+		"@sveltejs/adapter-vercel": "^5.7.2"
 	}
 }

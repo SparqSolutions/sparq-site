@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { PUBLIC_N8N_WEBHOOK_URL } from '$env/static/public';
   
   type Point = { x: number, y: number };
   type Path = { start: Point, end: Point };
 
   // Chat functionality variables
   let chatInput = '';
-  const n8nUrl = 'https://milestonemanagement.app.n8n.cloud/webhook/573d6644-8a72-445a-9011-209ebf37aaf5';
+  const n8nUrl = PUBLIC_N8N_WEBHOOK_URL;
   let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
   let isSending = false;
   let sessionId = '';
