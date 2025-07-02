@@ -9,7 +9,10 @@
   // Chat functionality variables
   let chatInput = '';
   const n8nUrl = PUBLIC_N8N_WEBHOOK_URL;
-  let chatMessages: { from: 'user' | 'bot', text: string }[] = [];
+  let chatMessages: { from: 'user' | 'bot', text: string }[] = [{
+    from: 'bot',
+    text: 'Hello! I am the Automated Assistant for Sparq Solutions. I can answer questions about our services and I can also schedule consultations for you! What can I help with?'
+  }];
   let isSending = false;
   let sessionId = '';
 
@@ -192,11 +195,20 @@
       if (link) {
         const href = link.getAttribute('href');
         if (href) {
+          event.preventDefault();
+          
+          // Special handling for home link
+          if (href === '/#home') {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+            return;
+          }
+          
           const selector = href.substring(1); // e.g., /#home -> #home
           const element = document.querySelector(selector) as HTMLElement;
           if (element) {
-            event.preventDefault();
-            
             const nav = document.querySelector('.main-nav') as HTMLElement;
             const navHeight = nav ? nav.offsetHeight : 0;
             const extraPadding = 20; // extra space below the nav bar
@@ -366,7 +378,7 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-links">
-        <a href="/#home" class="nav-link active">Home</a>
+        <a href="/" class="nav-link active">Home</a>
         <a href="/#demos" class="nav-link">Autonomous Demos</a>
         <a href="/#solutions" class="nav-link">Solutions</a>
 

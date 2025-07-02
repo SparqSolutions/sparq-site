@@ -17,7 +17,12 @@
 
     <div class="scheduling-widget-container">
       <!-- Calendly inline widget begin -->
-      <div class="calendly-inline-widget" data-url="https://calendly.com/company-sparqsolutionsai/30min?primary_color=e7c63f"></div>
+      <div 
+        class="calendly-inline-widget" 
+        data-url="https://calendly.com/company-sparqsolutionsai/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=000000&text_color=b8860b&primary_color=b8860b" 
+        style="min-width:320px;height:700px;"
+      ></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
       <!-- Calendly inline widget end -->
     </div>
 
@@ -48,6 +53,10 @@
   .section-subtitle {
     font-size: 1.2rem;
     color: #666666;
+    background: linear-gradient(90deg, #bab8b1 0%, #d1cfc7 25%, #ffffff 50%, #d1cfc7 75%, #bab8b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 3rem;
   }
 
