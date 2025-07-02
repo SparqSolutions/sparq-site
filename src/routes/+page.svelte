@@ -49,8 +49,7 @@
           </div>
           <p class="hero-tagline">Specialized Autonomous Business Solutions</p>
           <p class="hero-description">
-            We build and deploy automated solutions to handle your social media, generate content, and engage with your customers. 
-            Our solutions are designed to grow your business and streamline your operations.
+            We design and deploy AI solutions that solve real business challenges by automating workflows, accelerating growth, and enhancing customer experiences. From social media and content automation to complex operational systems, everything we customize is engineered to enhance your business.
           </p>
           
           <!--<div class="hero-stats">
@@ -81,9 +80,10 @@
   <!-- AI Demos Section -->
   <section class="demos-section" id="demos">
     <div class="section-container">
-      <h2 class="section-title gold-gradient">Infinite possibilities with Autonomous Deployments</h2>
+      <h2 class="section-title gold-gradient">Infinite Potential with Autonomous AI Deployments
+      </h2>
       <p class="section-subtitle">
-        See how autonomous solutions can work for your business. Automation in key areas help you grow.
+        Automate your business with smart AI systems that run 24/7. Boost efficiency, engage customers, and drive growth with no extra hands needed.
       </p>
       
       <div class="rotating-demo-window glass-panel">
@@ -123,7 +123,7 @@
     <div class="section-container">
       <h2 class="section-title gold-gradient">Solutions for Your Business</h2>
       <p class="section-subtitle">
-        We offer a range of autonomous solutions to meet the needs of small and medium-sized businesses.
+        We offer a range of autonomous solutions to meet the needs of businesses of all sizes. From small to large, we’ve got you covered.
       </p>
       
       <div class="solutions-grid">
