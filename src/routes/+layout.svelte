@@ -745,13 +745,13 @@
     }
 
     .chat-nub-container {
-      bottom: 1rem;
-      right: 1rem;
+      bottom: 0.75rem;
+      right: 0.75rem;
     }
 
     .chat-nub-button {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
     }
 
     .chat-window {

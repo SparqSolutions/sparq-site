@@ -6,57 +6,73 @@
   let message = '';
   let isSubmitting = false;
   let submissionStatus: 'success' | 'error' | null = null;
+  let errorMessages: string[] = [];
+
+  function validateForm(): boolean {
+    errorMessages = [];
+    
+    if (!name.trim()) {
+      errorMessages.push('Name is required');
+    }
+    if (!email.trim()) {
+      errorMessages.push('Email is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorMessages.push('Please enter a valid email address');
+    }
+    if (!message.trim()) {
+      errorMessages.push('Message is required');
+    }
+    
+    return errorMessages.length === 0;
+  }
 
   async function handleSubmit() {
-    if (!name || !email || !message) {
-      submissionStatus = 'error';
-      return;
-    }
-    
-    isSubmitting = true;
-    submissionStatus = null;
-    
-    // Replace this URL with your Google Apps Script web app URL
-    const apiEndpoint = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
-
-    try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name, 
-          email, 
-          phone, 
-          preferredContact, 
-          message 
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const result = await response.json();
-      
-      if (result.status === 'success') {
-        submissionStatus = 'success';
-        // Clear form
-        name = '';
-        email = '';
-        phone = '';
-        preferredContact = '';
-        message = '';
-      } else {
-        throw new Error('Submission failed');
-      }
-
-    } catch (error) {
-      console.error('There was an error submitting the form:', error);
-      submissionStatus = 'error';
-    } finally {
-      isSubmitting = false;
-    }
+  if (!name || !email || !message) {
+    submissionStatus = 'error';
+    return;
   }
+  
+  isSubmitting = true;
+  submissionStatus = null;
+  
+  // Replace with your actual Google Apps Script Web App URL
+  const apiEndpoint = 'https://script.google.com/macros/s/AKfycbw6MetcD88WyJbMQXTDcMgihL_irABUrZbOLzHWZB1SV3FBAoXRtDtglM1x1hxHV1zNlQ/exec';
+
+  try {
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('preferredContact', preferredContact);
+    formData.append('message', message);
+
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      submissionStatus = 'success';
+      // Clear form
+      name = '';
+      email = '';
+      phone = '';
+      preferredContact = '';
+      message = '';
+    } else {
+      submissionStatus = 'error';
+    }
+
+  } catch (error) {
+    console.error('There was an error submitting the form:', error);
+    submissionStatus = 'error';
+  } finally {
+    isSubmitting = false;
+  }
+}
 </script>
 
 <svelte:head>
@@ -138,9 +154,13 @@
           </div>
         {/if}
 
-        {#if submissionStatus === 'error'}
+        {#if submissionStatus === 'error' && errorMessages.length > 0}
           <div class="alert error">
-            Please fill in all required fields marked with *.
+            <ul class="error-list">
+              {#each errorMessages as error}
+                <li>{error}</li>
+              {/each}
+            </ul>
           </div>
         {/if}
 
@@ -301,6 +321,20 @@
     background-clip: text;
     max-width: 700px;
     margin: 0 auto 3rem auto;
+  }
+
+  .error-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .error-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .error-list li:last-child {
+    margin-bottom: 0;
   }
 
   @media (max-width: 768px) {
