@@ -145,7 +145,7 @@
             <img src="/icon-nlp.svg" alt="AI Content Creation Icon" />
           </div>
           <h3 class="gold-gradient">Autonomous Content Creation</h3>
-          <p class="solution-description">Generate SEO-friendly articles, blog posts, and marketing copy that resonates with your target audience.</p>
+          <p class="solution-description">Leverage emerging trends. Generate and strategically deploy promotional materials that will drive engagment and create leads.</p>
           <div class="solution-features">
             <span class="feature-tag">Content Strategy</span>
             <span class="feature-tag">SEO</span>
