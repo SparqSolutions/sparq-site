@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, beforeUpdate, afterUpdate } from 'svelte';
+  import { onMount, beforeUpdate, afterUpdate, tick } from 'svelte';
   import { browser } from '$app/environment';
   import { PUBLIC_N8N_WEBHOOK_URL } from '$env/static/public';
   
@@ -15,6 +15,7 @@
   }];
   let isSending = false;
   let sessionId = '';
+  let chatInputElement: HTMLInputElement;
 
   // Chat functions
   async function sendMessage() {
@@ -94,6 +95,10 @@
       chatMessages = [...chatMessages, { from: 'bot', text: errorMessage }];
     } finally {
       isSending = false;
+      await tick();
+      if (chatInputElement) {
+        chatInputElement.focus();
+      }
       console.log('[Chat] sendMessage process finished.');
     }
   }
@@ -459,6 +464,7 @@
               bind:value={chatInput}
               on:keydown={handleKeyDown}
               disabled={isSending}
+              bind:this={chatInputElement}
             />
             <button on:click={sendMessage} disabled={isSending || !chatInput.trim()}>Send</button>
         </div>
@@ -1012,6 +1018,7 @@
     padding: 0.5rem;
     color: #E0E0E0;
     font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
   }
 
   .chat-footer input::placeholder {
