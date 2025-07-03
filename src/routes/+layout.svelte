@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, beforeUpdate, afterUpdate } from 'svelte';
   import { browser } from '$app/environment';
   import { PUBLIC_N8N_WEBHOOK_URL } from '$env/static/public';
   
@@ -360,6 +360,22 @@
   function toggleChat() {
     isChatOpen = !isChatOpen;
   }
+
+  let chatBodyEl: HTMLDivElement;
+  let shouldScroll = false;
+
+  beforeUpdate(() => {
+    if (!chatBodyEl) return;
+    // We should scroll down only if the user is already at the bottom of the chat.
+    // A little buffer is added (e.g. 5px) in case of rounding issues.
+    shouldScroll = chatBodyEl.scrollHeight - chatBodyEl.clientHeight <= chatBodyEl.scrollTop + 5;
+  });
+
+  afterUpdate(() => {
+    if (shouldScroll && chatBodyEl) {
+      chatBodyEl.scrollTop = chatBodyEl.scrollHeight;
+    }
+  });
 </script>
 
 <svelte:head>
@@ -424,7 +440,7 @@
           <h4 class="gold-gradient">SPARQ AI Assistant</h4>
           <button class="close-chat" on:click={toggleChat}>&times;</button>
         </div>
-        <div class="chat-body">
+        <div class="chat-body" bind:this={chatBodyEl}>
           {#each chatMessages as msg}
             <div class="chat-message {msg.from}">
               <span>{msg.text}</span>
@@ -1041,7 +1057,7 @@
 
   .chat-message span {
     color: #E0E0E0;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 </style> 

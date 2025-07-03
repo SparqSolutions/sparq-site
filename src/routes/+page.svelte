@@ -123,7 +123,7 @@
     <div class="section-container">
       <h2 class="section-title gold-gradient">Solutions for Your Business</h2>
       <p class="section-subtitle">
-        We offer a range of autonomous solutions to meet the needs of businesses of all sizes. From small to large, we’ve got you covered.
+        We offer a range of autonomous solutions to meet the needs of businesses of all sizes. From small to large, we've got you covered.
       </p>
       
       <div class="solutions-grid">
@@ -344,17 +344,6 @@
     height: auto;
     padding: 2rem;
     /* Apply golden gradient effect to the logo */
-    filter: 
-      saturate(2) 
-      hue-rotate(25deg) 
-      brightness(1.1) 
-      contrast(1.1)
-      drop-shadow(0 0 30px rgba(212, 175, 55, 0.6))
-      drop-shadow(0 0 60px rgba(212, 175, 55, 0.3));
-    transition: filter 0.3s ease;
-  }
-
-  .hero-logo-image:hover {
     filter: 
       saturate(2.2) 
       hue-rotate(25deg) 
