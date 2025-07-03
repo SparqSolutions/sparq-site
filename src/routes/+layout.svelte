@@ -1059,5 +1059,6 @@
     color: #E0E0E0;
     font-size: 1rem;
     line-height: 1.6;
+    font-weight: bold;
   }
 </style> 
