@@ -2,7 +2,10 @@
   import { onMount, beforeUpdate, afterUpdate, tick } from 'svelte';
   import { browser } from '$app/environment';
   import { PUBLIC_N8N_WEBHOOK_URL } from '$env/static/public';
+  import { injectAnalytics } from '@vercel/analytics/sveltekit';
   
+  injectAnalytics();
+
   type Point = { x: number, y: number };
   type Path = { start: Point, end: Point };
 
@@ -17,6 +20,37 @@
   let sessionId = '';
   let chatInputElement: HTMLInputElement;
 
+  // Simple formatting function for dates and times
+  function formatChatMessage(text: string): string {
+    if (!text) return text;
+
+    let formatted = text
+      // Format time slots (9 AM, 10:30 PM, etc.)
+      .replace(/(\d{1,2}:?\d{0,2}\s*(?:AM|PM|am|pm))/g, '<span class="time-slot">$1</span>')
+
+      // Format dates (Monday, Tuesday, tomorrow, today, etc.)
+      .replace(/((?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|tomorrow|today),?\s*(?:\w+\s+\d{1,2}(?:st|nd|rd|th)?)?)/gi, '<span class="date-highlight">$1</span>')
+
+      // Format CST/timezone mentions
+      .replace(/\b(CST|Central|Central Time)\b/gi, '<span class="timezone">$1</span>')
+
+      // Format confirmation messages
+      .replace(/(you're all set|confirmed|scheduled|appointment confirmed)/gi, '<span class="confirmation">$1</span>')
+
+      // Simple available times formatting - convert lists to bullet points
+      .replace(/(?:available|open|free)\s*(?:times?|slots?)?\s*(?:include|are|:)?\s*((?:\d{1,2}:?\d{0,2}\s*(?:AM|PM|am|pm)(?:\s*,?\s*(?:and\s*)?\d{1,2}:?\d{0,2}\s*(?:AM|PM|am|pm))*)+)/gi,
+        (match, times) => {
+          const timeList = times.split(/,|\sand\s/).map((time: string) => time.trim()).filter((t: string) => t);
+          const formattedTimes = timeList.map((time: string) => `• ${time}`).join('<br>');
+          return `<div class="available-times">Available times:<br>${formattedTimes}</div>`;
+        })
+
+      // Format line breaks
+      .replace(/\n/g, '<br>');
+
+    return formatted;
+  }
+
   // Chat functions
   async function sendMessage() {
     if (!chatInput.trim()) return;
@@ -27,14 +61,14 @@
     console.log('[Chat] User message added to UI:', message);
     chatInput = '';
     isSending = true;
-    
+
     try {
       if (!sessionId) {
         sessionId = crypto.randomUUID();
         console.log('[Chat] New session created with ID:', sessionId);
       }
       console.log(`[Chat] Preparing to send message for session: ${sessionId}`);
-      
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
         console.warn('[Chat] Request timed out after 30 seconds.');
@@ -42,7 +76,7 @@
       }, 30000);
 
       //const requestBody = { message };
-      const headers = { 
+      const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'sessionId': sessionId
@@ -51,16 +85,16 @@
       console.log('[Chat] Sending POST request to:', n8nUrl);
       console.log('[Chat] Headers:', headers);
       console.log('[Chat] Body:', JSON.stringify(message, null, 2));
-      
+
       const res = await fetch(n8nUrl, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({message: message}),
         signal: controller.signal
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       console.log(`[Chat] Received response. Status: ${res.status}, StatusText: ${res.statusText}`);
 
       if (!res.ok) {
@@ -68,15 +102,15 @@
         console.error(`[Chat] HTTP Error Response! Status: ${res.status}. Body: ${errorBody}`);
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      
+
       const data = await res.json();
       console.log('[Chat] Successfully parsed JSON response:', data);
-      
+
       const botReply = data.reply || data.output || data.response || data.message || data.text || data.content || 'No response received';
       console.log('[Chat] Extracted bot reply:', botReply);
 
       chatMessages = [...chatMessages, { from: 'bot', text: botReply }];
-      
+
     } catch (e: any) {
       console.error('[Chat] Error in sendMessage:', e);
 
@@ -91,7 +125,7 @@
         errorMessage = `Server error: ${e.message}`;
         console.error(`[Chat] Error type: HTTP error (${e.message})`);
       }
-      
+
       chatMessages = [...chatMessages, { from: 'bot', text: errorMessage }];
     } finally {
       isSending = false;
@@ -157,12 +191,12 @@
 
     update(ctx: CanvasRenderingContext2D, particleSpeed: number, circuitPaths: Path[], deltaTime: number) {
       if (!this.path || !ctx) return;
-      
+
       this.lifetime -= deltaTime;
       if (this.lifetime <= 0) {
         this.reset(circuitPaths);
       }
-      
+
       const pathLength = Math.hypot(this.path.end.x - this.path.start.x, this.path.end.y - this.path.start.y);
       if(pathLength > 0) {
           this.progress += particleSpeed / pathLength;
@@ -185,11 +219,11 @@
       ctx.shadowBlur = 0;
     }
   }
-  
+
   onMount(() => {
     // Simple electrical effects without canvas
     createSimpleEffects();
-    
+
     // Generative PCB background
     const pcbCleanup = setupPcbAnimation();
 
@@ -201,7 +235,7 @@
         const href = link.getAttribute('href');
         if (href) {
           event.preventDefault();
-          
+
           // Special handling for home link
           if (href === '/#home') {
             window.scrollTo({
@@ -210,17 +244,17 @@
             });
             return;
           }
-          
+
           const selector = href.substring(1); // e.g., /#home -> #home
           const element = document.querySelector(selector) as HTMLElement;
           if (element) {
             const nav = document.querySelector('.main-nav') as HTMLElement;
             const navHeight = nav ? nav.offsetHeight : 0;
             const extraPadding = 20; // extra space below the nav bar
-            
+
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - navHeight - extraPadding;
-      
+
             window.scrollTo({
               top: offsetPosition,
               behavior: 'smooth'
@@ -233,7 +267,7 @@
     if (browser) {
       document.body.addEventListener('click', smoothScrollHandler);
     }
-    
+
     return () => {
       if (pcbCleanup) pcbCleanup();
       if (browser) {
@@ -241,7 +275,7 @@
       }
     };
   });
-  
+
   function setupPcbAnimation() {
     const canvas = document.getElementById('pcb-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -313,7 +347,7 @@
     let lastTime = 0;
     function animate(time = 0) {
       if (!ctx) return;
-      
+
       const deltaTime = time - lastTime;
       lastTime = time;
 
@@ -346,7 +380,7 @@
       window.removeEventListener('resize', init);
     };
   }
-  
+
   function createSimpleEffects() {
     // Add random sparks to existing elements
     setInterval(() => {
@@ -394,7 +428,7 @@
   <div class="pcb-background">
     <canvas id="pcb-canvas"></canvas>
   </div>
-  
+
   <!-- Navigation -->
   <nav class="main-nav">
     <div class="nav-container">
@@ -409,11 +443,11 @@
       <a href="/contact" style="text-decoration: none;" class="nav-cta">Contact Us</a>
     </div>
   </nav>
-  
+
   <main class="main-content">
     <slot />
   </main>
-  
+
   <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-container">
@@ -448,7 +482,13 @@
         <div class="chat-body" bind:this={chatBodyEl}>
           {#each chatMessages as msg}
             <div class="chat-message {msg.from}">
-              <span>{msg.text}</span>
+              {#if msg.from === 'bot'}
+                <div class="message-content">
+                  {@html formatChatMessage(msg.text)}
+                </div>
+              {:else}
+                <span>{msg.text}</span>
+              {/if}
             </div>
           {/each}
           {#if isSending}
@@ -458,9 +498,9 @@
           {/if}
         </div>
         <div class="chat-footer">
-            <input 
-              type="text" 
-              placeholder="Type your message..." 
+            <input
+              type="text"
+              placeholder="Type your message..."
               bind:value={chatInput}
               on:keydown={handleKeyDown}
               disabled={isSending}
@@ -479,7 +519,7 @@
     padding: 0;
     box-sizing: border-box;
   }
-  
+
   :global(body) {
     font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0D0D0D;
@@ -487,7 +527,7 @@
     overflow-x: hidden;
     line-height: 1.6;
   }
-  
+
   .app-container {
     position: relative;
     min-height: 100vh;
@@ -495,7 +535,7 @@
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .pcb-background {
     position: fixed;
     top: 0;
@@ -506,7 +546,7 @@
     z-index: 0;
     overflow: hidden;
   }
-  
+
   .app-container::before {
     content: '';
     position: fixed;
@@ -518,11 +558,11 @@
     z-index: 1;
     background: linear-gradient(to right, rgba(13,13,13,0) 0%, rgba(240, 184, 30, 0.1) 20%, rgba(240, 184, 30, 0.1) 80%, rgba(13,13,13,0) 100%);
   }
-  
+
   .occlusion-vignette {
     /* Style removed for light theme */
   }
-  
+
   #pcb-canvas {
     width: 100%;
     height: 100%;
@@ -531,7 +571,7 @@
     top: 0;
     left: 0;
   }
-  
+
   /* Navigation */
   .main-nav {
     position: fixed;
@@ -542,7 +582,7 @@
     background: rgba(13, 13, 13, 0.7);
     backdrop-filter: blur(20px);
   }
-  
+
   .nav-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -552,20 +592,20 @@
     justify-content: space-between;
     border-bottom: 2px solid rgba(184, 134, 11, 0.1);
   }
-  
+
   .nav-logo {
     display: flex;
     align-items: center;
     gap: 0.75rem;
   }
-  
+
   .nav-logo-img {
     width: 40px;
     height: 40px;
     object-fit: contain;
     filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 8px rgba(184, 134, 11, 0.3));
   }
-  
+
   .nav-brand {
     font-size: 1.5rem;
     font-weight: 700;
@@ -574,12 +614,12 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .nav-links {
     display: flex;
     gap: 2rem;
   }
-  
+
   .nav-link {
     color: #CCCCCC;
     text-decoration: none;
@@ -587,12 +627,12 @@
     transition: all 0.3s ease;
     position: relative;
   }
-  
+
   .nav-link:hover,
   .nav-link.active {
     color: #B8860B;
   }
-  
+
   .nav-link.active::after {
     content: '';
     position: absolute;
@@ -602,7 +642,7 @@
     height: 2px;
     background: linear-gradient(90deg, transparent, #DAA520, transparent);
   }
-  
+
   .nav-cta {
     background: linear-gradient(135deg, #B8860B 0%, #DAA520 100%);
     color: #0D0D0D;
@@ -613,12 +653,12 @@
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  
+
   .nav-cta:hover {
     transform: translateY(-1px);
     box-shadow: 0 8px 25px rgba(218, 165, 32, 0.3);
   }
-  
+
   .main-content {
     position: relative;
     z-index: 10;
@@ -626,7 +666,7 @@
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   /* Footer */
   .main-footer {
     background: rgba(13, 13, 13, 0.98);
@@ -636,7 +676,7 @@
     position: relative;
     z-index: 10;
   }
-  
+
   .footer-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -645,31 +685,31 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
   }
-  
+
   .footer-section h4 {
     color: #DAA520;
     margin-bottom: 1rem;
     font-weight: 600;
   }
-  
+
   .footer-section ul {
     list-style: none;
   }
-  
+
   .footer-section ul li {
     margin-bottom: 0.5rem;
   }
-  
+
   .footer-section a {
     color: #CCCCCC;
     text-decoration: none;
     transition: color 0.3s ease;
   }
-  
+
   .footer-section a:hover {
     color: #B8860B;
   }
-  
+
   /* Global utility classes */
   :global(.gold-gradient) {
     background: linear-gradient(135deg, #B8860B 0%, #DAA520 25%, #CD853F 50%, #B8860B 75%, #8B7355 100%);
@@ -677,35 +717,35 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   :global(.glass-panel) {
     background: rgba(20, 20, 20, 0.75);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(184, 134, 11, 0.1);
     border-radius: 12px;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(218, 165, 32, 0.05);
   }
-  
+
   :global(.interactive-card) {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
   }
-  
+
   :global(.interactive-card:hover) {
     transform: translateY(-4px);
-    box-shadow: 
+    box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.6),
       0 0 30px rgba(218, 165, 32, 0.2),
       inset 0 1px 0 rgba(218, 165, 32, 0.25);
     border-color: rgba(218, 165, 32, 0.4);
   }
-  
+
   :global(.spark-target) {
     position: relative;
   }
-  
+
   :global(.spark-target.spark-active::before) {
     content: '';
     position: absolute;
@@ -719,20 +759,20 @@
     box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700;
     animation: spark-flash 1s ease-out;
   }
-  
+
   @keyframes spark-flash {
     0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
   }
-  
+
   :global(.section-title) {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
     text-align: center;
   }
-  
+
   :global(.section-subtitle) {
     font-size: 1.2rem;
     color: #B0B0B0;
@@ -742,90 +782,6 @@
     margin-left: auto;
     margin-right: auto;
   }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .nav-container {
-      padding: 0.75rem;
-      width: 100%;
-      overflow-x: hidden;
-    }
-    
-    .nav-links {
-      display: none;
-    }
-    
-    .nav-cta {
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-    }
-    
-    .footer-container {
-      grid-template-columns: 1fr;
-      text-align: center;
-      padding: 0 1rem;
-    }
-
-    .chat-nub-container {
-      bottom: 0.75rem;
-      right: 0.75rem;
-    }
-
-    .chat-nub-button {
-      width: 60px;
-      height: 60px;
-    }
-
-    .chat-window {
-      width: calc(100vw - 2rem);
-      right: 0;
-      bottom: calc(100% + 0.5rem);
-    }
-
-    .pcb-background {
-      width: 100%;
-      height: 100%;
-    }
-
-    #pcb-canvas {
-      transform: scale(0.8);
-      transform-origin: center center;
-    }
-  }
-
-  :global(#n8n-chat) {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  :global(.n8n-chat-footer) {
-    display: none !important;
-  }
-
-  :global(.n8n-chat-header) {
-    display: none !important;
-  }
-
-  :global(.n8n-chat-messages) {
-    background: transparent !important;
-  }
-
-  :global(.n8n-chat-input-container) {
-    background: transparent !important;
-  }
-
-	:global(.n8n-chat-message-bot .n8n-chat-message-text) {
-		background: rgba(245, 245, 245, 0.9) !important;
-    border: 1px solid rgba(184, 134, 11, 0.1) !important;
-	}
-
-	:global(.n8n-chat-message-user .n8n-chat-message-text) {
-		background: rgba(218, 165, 32, 0.1) !important;
-    border: 1px solid rgba(218, 165, 32, 0.2) !important;
-	}
 
   /* Chat Nub */
   .chat-nub-container {
@@ -853,7 +809,7 @@
     position: relative;
     background: transparent;
   }
-  
+
   .chat-nub-button::before {
     content: '';
     position: absolute;
@@ -876,7 +832,7 @@
   .chat-nub-button:hover::before {
     opacity: 0.7;
   }
-  
+
   .chat-nub-gradient {
     width: 90%;
     height: 90%;
@@ -888,19 +844,19 @@
     background: radial-gradient(circle, rgb(0, 0, 0) 15%, rgba(0, 0, 0, 0.85) 30%, rgba(255, 255, 255, 0)50%);
     animation: pulse-transform 2.5s infinite ease-in-out;
   }
-  
+
   .chat-nub-button img {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
-  
+
   @keyframes pulse-transform {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
   }
-  
+
   .chat-prompt {
     display: flex;
     align-items: center;
@@ -912,7 +868,7 @@
     color: #DAA520;
     animation: fade-in 0.5s ease;
   }
-  
+
   @keyframes fade-in {
     from { opacity: 0; transform: translateX(10px); }
     to { opacity: 1; transform: translateX(0); }
@@ -963,7 +919,7 @@
     line-height: 1;
     padding: 0;
   }
-  
+
   .close-chat:hover {
     color: #DAA520;
   }
@@ -975,33 +931,33 @@
     color: #E0E0E0;
     overflow-y: auto;
   }
-  
+
   /* Custom scrollbar styling */
   .chat-body::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   .chat-body::-webkit-scrollbar-track {
     background: rgba(13, 13, 13, 0.3);
     border-radius: 3px;
   }
-  
+
   .chat-body::-webkit-scrollbar-thumb {
     background: rgba(218, 165, 32, 0.4);
     border-radius: 3px;
     transition: background 0.3s ease;
   }
-  
+
   .chat-body::-webkit-scrollbar-thumb:hover {
     background: rgba(218, 165, 32, 0.6);
   }
-  
+
   /* Firefox scrollbar */
   .chat-body {
     scrollbar-width: thin;
     scrollbar-color: rgba(218, 165, 32, 0.4) rgba(13, 13, 13, 0.3);
   }
-  
+
   .chat-footer {
     display: flex;
     padding: 0.75rem;
@@ -1009,7 +965,7 @@
     background: rgba(13, 13, 13, 0.9);
     flex-shrink: 0;
   }
-  
+
   .chat-footer input {
     flex-grow: 1;
     background: rgba(30, 30, 30, 0.95);
@@ -1024,7 +980,7 @@
   .chat-footer input::placeholder {
     color: #777;
   }
-  
+
   .chat-footer button {
     background: #DAA520;
     border: none;
@@ -1068,4 +1024,143 @@
     line-height: 1.6;
     font-weight: bold;
   }
-</style> 
+
+  /* Simple chat formatting styles */
+  .message-content {
+    color: #E0E0E0;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: bold;
+  }
+
+  .time-slot {
+    background: rgba(218, 165, 32, 0.2);
+    color: #DAA520;
+    padding: 0.15rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .date-highlight {
+    background: rgba(72, 187, 120, 0.2);
+    color: #48BB78;
+    padding: 0.15rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .timezone {
+    background: rgba(159, 122, 234, 0.2);
+    color: #9F7AEA;
+    padding: 0.15rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .confirmation {
+    background: rgba(72, 187, 120, 0.2);
+    color: #48BB78;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .available-times {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(218, 165, 32, 0.1);
+    border-left: 3px solid #DAA520;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #DAA520;
+    line-height: 1.4;
+  }
+
+  /* n8n chat integration styles */
+  :global(#n8n-chat) {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.n8n-chat-footer) {
+    display: none !important;
+  }
+
+  :global(.n8n-chat-header) {
+    display: none !important;
+  }
+
+  :global(.n8n-chat-messages) {
+    background: transparent !important;
+  }
+
+  :global(.n8n-chat-input-container) {
+    background: transparent !important;
+  }
+
+  :global(.n8n-chat-message-bot .n8n-chat-message-text) {
+    background: rgba(245, 245, 245, 0.9) !important;
+    border: 1px solid rgba(184, 134, 11, 0.1) !important;
+  }
+
+  :global(.n8n-chat-message-user .n8n-chat-message-text) {
+    background: rgba(218, 165, 32, 0.1) !important;
+    border: 1px solid rgba(218, 165, 32, 0.2) !important;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .nav-container {
+      padding: 0.75rem;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    .nav-cta {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-container {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .chat-nub-container {
+      bottom: 0.75rem;
+      right: 0.75rem;
+    }
+
+    .chat-nub-button {
+      width: 60px;
+      height: 60px;
+    }
+
+    .chat-window {
+      width: calc(100vw - 2rem);
+      right: 0;
+      bottom: calc(100% + 0.5rem);
+    }
+
+    .pcb-background {
+      width: 100%;
+      height: 100%;
+    }
+
+    #pcb-canvas {
+      transform: scale(0.8);
+      transform-origin: center center;
+    }
+  }
+</style>
